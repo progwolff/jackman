@@ -4,13 +4,13 @@ Collection of scripts that help managing multiple audio interfaces with Jack
 # Features
  
 - Persistent configurations per device
--- jackman keeps your jack configurations for each audio device and configures jack for you.
+ - jackman keeps your jack configurations for each audio device and configures jack for you.
 - Hotplugging
--- Based on priorities jackman will change your jack master device when you plug in a USB audio interface with higher priority than the current master.
--- If you remove a USB device that is the current master, jackman will configure the remaining card with highest priority as new master. No need to restart jack 
+ - Based on priorities jackman will change your jack master device when you plug in a USB audio interface with higher priority than the current master.
+ - If you remove a USB device that is the current master, jackman will configure the remaining card with highest priority as new master. No need to restart jack 
 manually.
 - Works great in combination with libflashsupport-jack and pulseaudio-jack.
--- Just press play, jackman will care for your device configuration
+ - Just press play, jackman will care for your device configuration
 
 # Dependencies
 - bash
