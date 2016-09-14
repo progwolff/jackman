@@ -19,7 +19,7 @@ use the provided PKGBUILD
 copy the following files:
 
 |  File                    | Destination                            |
-|-------------------------------------------------------------------|
+|--------------------------|----------------------------------------|
 | jackman                  | /usr/bin/                              |
 | jackman_udev_plug        | /usr/bin/                              |
 | jackman_udev_unplug      | /usr/bin/                              |
@@ -29,13 +29,13 @@ copy the following files:
 | jackman_unplug@.service  | /etc/systemd/system/                   |
 
 run 
-# udevadm control -R
+`# udevadm control -R`
 or reboot your system
 
 # Configuration
-copy jackman.conf to $HOME/.config/
+copy `jackman.conf` to `$HOME/.config/`
 add devices to this config file and edit the parameters to your needs
 
-$ jack_control dpd <parameter> might help
+`$ jack_control dpd <parameter>` might help
 
 on KDE you might want to use jackman_kcm 
