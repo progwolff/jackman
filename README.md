@@ -34,8 +34,13 @@ or reboot your system
 
 # Configuration
 copy `jackman.conf` to `$HOME/.config/`
+
 add devices to this config file and edit the parameters to your needs
 
 `$ jack_control dpd <parameter>` might help
 
 on KDE you might want to use [jackman_kcm](https://github.com/progwolff/jackman_kcm) 
+
+# Usage
+
+run `jackman -h` for help
