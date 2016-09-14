@@ -70,24 +70,24 @@ function jack_apply_config {
     IFS=';' read -ra configs <<< "$confline"		
     for i in "${configs[@]}"; do
         IFS='=' read -ra conf <<< "$i"
-        timeout 1 /usr/bin/jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null
+        /usr/bin/timeout 1 /usr/bin/jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null
     done
 }
 
 function force_sm {
-    timeout 1 /usr/bin/jack_control sm </dev/null >/dev/null 2>/dev/null
+    /usr/bin/timeout 1 /usr/bin/jack_control sm </dev/null >/dev/null 2>/dev/null
     
-    if ! timeout 1 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null\
-           || ! timeout 1 /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null; then 
-        timeout 1 /usr/bin/jack_control exit
+    if ! /usr/bin/timeout 1 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null\
+           || ! /usr/bin/timeout 1 /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null; then 
+        /usr/bin/timeout 1 /usr/bin/jack_control exit
         jack_apply_config
-        /usr/bin/jack_control sm </dev/null >/dev/null 2>/dev/null
-        /usr/bin/jack_control start 
+        /usr/bin/timeout 1 /usr/bin/jack_control sm </dev/null >/dev/null 2>/dev/null
+        /usr/bin/timeout 1 /usr/bin/jack_control start 
     fi
-    if ! timeout 1 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then 
+    if ! /usr/bin/timeout 1 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then 
         /usr/bin/killall -9 -w jackdbus 
         jack_apply_config
-        /usr/bin/jack_control start </dev/null >/dev/null 2>/dev/null
+        /usr/bin/timeout 1 /usr/bin/jack_control start </dev/null >/dev/null 2>/dev/null
     fi
 }
 
@@ -143,7 +143,7 @@ NAME="$SHORTNAME ($CARD)"
 
 
 # if jack is not running yet, replace current config and force jack to start
-jack_control status </dev/null >/dev/null 2>/dev/null || FORCEREPLACE=1
+/usr/bin/timeout 1 jack_control status </dev/null >/dev/null 2>/dev/null || FORCEREPLACE=1
 
 currentcard="$(jack_config device | grep -o -P '[0-9]' | head -1)"
 currentdevice="$(jack_config device | grep -o -P '[0-9]' | tail -n +2 | head -1)"
@@ -218,15 +218,15 @@ else
                         switchmaster=1
                     else
                         if [[ "period" = "${conf[0]// /}" ]]; then
-                            /usr/bin/jack_bufsize "$newval"
+                            /usr/bin/timeout 1 /usr/bin/jack_bufsize "$newval"
                             popup "`eval_gettext \"Buffer size changed from \\\${oldval} to \\\${newval}.\"`"
                         fi
                     fi
                 fi
-                /usr/bin/jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null
+                /usr/bin/timeout 1 /usr/bin/jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null
         done
         
-        cns="$(/usr/bin/jack_lsp -c)"
+        cns="$(/usr/bin/timeout 1 /usr/bin/jack_lsp -c)"
         IFS=',' read -ra cons <<< "${cns//$'\n'/,}"
             
         #don't switch master if nothing changed
@@ -234,7 +234,7 @@ else
             #popup "Device parameters did not change" &
             
             #exit if jack is running, force switch master if not.
-            /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null && /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null
+            /usr/bin/timeout 1 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null && /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null
             
         else
             
@@ -243,7 +243,7 @@ else
             
             force_sm
 
-            if ! /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then 
+            if ! /usr/bin/timeout 1 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then 
                 /usr/bin/kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Try again with other device parameters.")" -display ":0" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
                 /usr/bin/zenity --notification --display ":0" --text "$(gettext "Could not start jack.")"$'\n'"$(gettext "Try again with other device parameters.")" --title "$(gettext "Audio Interface")" --window-icon dialog-warning & 
                 die "$(gettext "Could not start jack.")"$'\n'"$(gettext "Try again with other device parameters.")"
