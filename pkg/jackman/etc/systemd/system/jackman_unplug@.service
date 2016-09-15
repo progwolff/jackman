@@ -1,9 +1,0 @@
-[Unit]
-Description=automatically switches jackdbus master device
-
-[Service]
-Type=forking
-ExecStart=/usr/bin/jackman_udev_unplug %I &
-
-[Install]
-WantedBy=multi-user.target
