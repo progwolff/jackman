@@ -1,35 +1,49 @@
 #!/bin/bash
 
-/usr/bin/echo "--$(date) jackman_udev--" >> /var/log/alsa/add.log
+/usr/bin/echo "--$(date) jackman_udev--" >> /var/log/jackman.log
 
 jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
 if [[ ! -z $1 ]]; then
     dev="$1"
-    /usr/bin/echo "arg: $1" >> /var/log/alsa/add.log
+    /usr/bin/echo "arg: $1" >> /var/log/jackman.log
     ID_MODEL=$(udevadm info ${dev//-/\/} | grep "ID_MODEL=" | rev | cut -d"=" -f 1 | rev)
     DEVNAME=$(udevadm info ${dev//-/\/} | grep "DEVNAME=" | rev | cut -d"=" -f 1 | rev)
 fi
 DISPLAY=":0"
 
 if [[ ! -z $ID_MODEL ]]; then
-    /usr/bin/echo "Device: $ID_MODEL,$DEVICE" >> /var/log/alsa/add.log
+    /usr/bin/echo "Device: $ID_MODEL,$DEVICE" >> /var/log/jackman.log
     thisuser=$(/usr/bin/id -un)
-    /usr/bin/echo "this user is \"${thisuser}\". jack user is \"${jackuser}\"" >> /var/log/alsa/add.log
+    /usr/bin/echo "this user is \"${thisuser}\". jack user is \"${jackuser}\"" >> /var/log/jackman.log
     if ( [[ -z $thisuser ]] || [[ ! $thisuser == $jackuser ]] ); then
-        /usr/bin/echo "running with su" >> /var/log/alsa/add.log
+        /usr/bin/echo "running with su" >> /var/log/jackman.log
         if [[ $(grep audio <<< $(id $jackuser -Gn)) ]]; then
-            /usr/bin/su $jackuser - -g audio -c "DEVICE=\"$DEVICE\" DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" DEVNAME=\"$DEVNAME\" ID_MODEL=\"$ID_MODEL\" FORCEREPLACE=\"$FORCEREPLACE\" /usr/bin/jackman -v" >> /var/log/alsa/add.log 2>&1
+            /usr/bin/su $jackuser - -g audio -c "DEVICE=\"$DEVICE\" DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" DEVNAME=\"$DEVNAME\" ID_MODEL=\"$ID_MODEL\" FORCEREPLACE=\"$FORCEREPLACE\" /usr/bin/jackman -v" >> /var/log/jackman.log 2>&1
         else
-            /usr/bin/su $jackuser - -c "DEVICE=\"$DEVICE\" DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" DEVNAME=\"$DEVNAME\" ID_MODEL=\"$ID_MODEL\" FORCEREPLACE=\"$FORCEREPLACE\" /usr/bin/jackman -v" >> /var/log/alsa/add.log 2>&1
+            /usr/bin/su $jackuser - -c "DEVICE=\"$DEVICE\" DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" DEVNAME=\"$DEVNAME\" ID_MODEL=\"$ID_MODEL\" FORCEREPLACE=\"$FORCEREPLACE\" /usr/bin/jackman -v" >> /var/log/jackman.log 2>&1
         fi
         if ! /usr/bin/su $jackuser - -c '/usr/bin/jack_control status'; then exit 1; fi
     else
-        /usr/bin/echo "su not neccessary" >> /var/log/alsa/add.log 
-        /usr/bin/jackman >> /var/log/alsa/add.log 2>&1
+        /usr/bin/echo "su not neccessary" >> /var/log/jackman.log 
+        /usr/bin/jackman >> /var/log/jackman.log 2>&1
         if ! /usr/bin/jack_control status ; then exit 1; fi
     fi
 else
-    /usr/bin/echo "no device given..." >> /var/log/alsa/add.log 
+    /usr/bin/echo "no device given..." >> /var/log/jackman.log 
+    if ( [[ -z $thisuser ]] || [[ ! $thisuser == $jackuser ]] ); then
+        /usr/bin/echo "running with su" >> /var/log/jackman.log
+        if [[ $(grep audio <<< $(id $jackuser -Gn)) ]]; then
+            /usr/bin/su $jackuser - -g audio -c "/usr/bin/jackman -vk" >> /var/log/jackman.log 2$
+        else
+            /usr/bin/su $jackuser - -c "/usr/bin/jackman -vk" >> /var/log/jackman.log 2>&1
+        fi
+        if ! /usr/bin/su $jackuser - -c '/usr/bin/jack_control status'; then exit 1; fi
+    else
+        /usr/bin/echo "su not neccessary" >> /var/log/jackman.log
+        /usr/bin/jackman -k >> /var/log/jackman.log 2>&1
+        if ! /usr/bin/jack_control status ; then exit 1; fi
+    fi
+
 fi
 

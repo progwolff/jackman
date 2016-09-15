@@ -1,0 +1,10 @@
+[Unit]
+Description=automatically switches jackdbus master device
+After=suspend.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/jackman_udev_plug &
+
+[Install]
+WantedBy=multi-user.target sleep.target

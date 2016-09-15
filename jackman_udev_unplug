@@ -6,7 +6,7 @@ export TEXTDOMAIN=jackman
 
 . /usr/bin/gettext.sh
 
-/usr/bin/echo "--$(date) alsa_remove--" >> /var/log/alsa/add.log
+/usr/bin/echo "--$(date) alsa_remove--" >> /var/log/jackman.log
 
 
 jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
@@ -14,7 +14,7 @@ jackhome=$(eval /usr/bin/echo ~$jackuser)
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
 
 if [[ ! -z $1 ]]; then
-    /usr/bin/echo "arg: $1" >> /var/log/alsa/add.log
+    /usr/bin/echo "arg: $1" >> /var/log/jackman.log
     CARD=$(grep -o -P '[0-9]*' <<< "$1" | head -1)
     DISPLAY=":0"
 fi
@@ -38,9 +38,9 @@ if [ ! -z $CARD ]; then
             /usr/bin/su $jackuser - -c "/usr/bin/jack_control stop" &
 
             if [[ $(grep audio <<< $(id $jackuser -Gn)) ]]; then
-                /usr/bin/su $jackuser - -g audio -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -fb\"${currentname},${currentdevice}\"" >> /var/log/alsa/add.log 2>&1
+                /usr/bin/su $jackuser - -g audio -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -fb\"${currentname},${currentdevice}\"" >> /var/log/jackman.log 2>&1
             else
-                /usr/bin/su $jackuser - -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -fb\"${currentname},${currentdevice}\"" >> /var/log/alsa/add.log 2>&1
+                /usr/bin/su $jackuser - -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -fb\"${currentname},${currentdevice}\"" >> /var/log/jackman.log 2>&1
             fi
             
             for ((i=0; i<${#cons[@]}; i++)); do

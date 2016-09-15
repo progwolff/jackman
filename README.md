@@ -40,6 +40,7 @@ Copy the following files:
 | `jackman.rules`            | `/etc/udev/rules.d/`                     |
 | `jackman_plug@.service`    | `/etc/systemd/system/`                   |
 | `jackman_unplug@.service`  | `/etc/systemd/system/`                   |
+| `jackman_init.service`     | `/etc/systemd/system/`                   |
 
 Run 
 `# udevadm control -R`

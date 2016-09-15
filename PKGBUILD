@@ -14,7 +14,7 @@ optdepends=('zenity: system notifications'
 	   'kdebase-kdialog: system notifications')
 source=()
 md5sums=()
-#install=.install
+install=.install
 
 package() {
   mkdir -p "$pkgdir/usr/bin"
