@@ -25,11 +25,11 @@ manually.
 # Installation
 
 ## Arch Linux 
-use the provided PKGBUILD
+Use the provided PKGBUILD
 
 ## Other Distros
 
-copy the following files:
+Copy the following files:
 
 |  File                      | Destination                              |
 |----------------------------|------------------------------------------|
@@ -41,26 +41,28 @@ copy the following files:
 | `jackman_plug@.service`    | `/etc/systemd/system/`                   |
 | `jackman_unplug@.service`  | `/etc/systemd/system/`                   |
 
-run 
+Run 
 `# udevadm control -R`
-or reboot your system
+or reboot your system.
 
 # Configuration
-copy `jackman.conf` to `$HOME/.config/`
+Copy `jackman.conf` to `$HOME/.config/`.
 
-add devices to this config file and edit the parameters to your needs
+Add devices to this config file and edit the parameters to your needs.
 
-`$ jack_control dpd <parameter>` might help
+Devices must be given as '<Alsa Short Name>,<Device Number>', e.g. 'HDA Intel MID,3'.
 
-on KDE you might want to use [jackman_kcm](https://github.com/progwolff/jackman_kcm) 
+`$ aplay -l` and `$ jack_control dpd <parameter>` might help to find the right values.
+
+On KDE you might want to use the systemsettings module [jackman_kcm](https://github.com/progwolff/jackman_kcm). 
 
 # Usage
 
-run `jackman -h` for help
+Run `jackman -h` for help or just plug in a USB audio interface.
 
 ## Notes on pulseaudio
 
-install pulseaudio-jack 
+Install pulseaudio-jack.
 
 This config is recommended (put it to /etc/pulse/daemon.conf):
 
