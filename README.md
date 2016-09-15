@@ -57,3 +57,69 @@ on KDE you might want to use [jackman_kcm](https://github.com/progwolff/jackman_
 # Usage
 
 run `jackman -h` for help
+
+## Notes on pulseaudio
+
+install pulseaudio-jack 
+
+This config is recommended (put it to /etc/pulse/daemon.conf):
+
+```
+daemonize = yes
+fail = yes
+high-priority = yes
+nice-level = -11
+realtime-scheduling = yes
+realtime-priority = 5
+allow-module-loading = yes
+allow-exit = yes
+use-pid-file = yes
+system-instance = no
+local-server-type = user
+cpu-limit = no
+enable-shm = yes
+flat-volumes = no
+lock-memory = no
+exit-idle-time = 20
+scache-idle-time = 20
+dl-search-path = /usr/lib/pulse-9.0/modules
+default-script-file = /etc/pulse/default.pa
+load-default-script-file = yes
+log-target = 
+log-level = notice
+resample-method = speex-float-1
+enable-remixing = yes
+enable-lfe-remixing = yes
+lfe-crossover-freq = 120
+default-sample-format = s16le
+default-sample-rate = 48000
+alternate-sample-rate = 48000
+default-sample-channels = 2
+default-channel-map = front-left,front-right
+default-fragments = 4
+default-fragment-size-msec = 25
+enable-deferred-volume = yes
+deferred-volume-safety-margin-usec = 8000
+deferred-volume-extra-delay-usec = 0
+shm-size-bytes = 0
+log-meta = no
+log-time = no
+log-backtrace = 0
+rlimit-fsize = -1
+rlimit-data = -1
+rlimit-stack = -1
+rlimit-core = -1
+rlimit-rss = -1
+rlimit-as = -1
+rlimit-nproc = -1
+rlimit-nofile = 256
+rlimit-memlock = -1
+rlimit-locks = -1
+rlimit-sigpending = -1
+rlimit-msgqueue = -1
+rlimit-nice = 31
+rlimit-rtprio = 9
+rlimit-rttime = 200000
+```
+
+You may also want do comment out lines 38-58 in /etc/pulse/default.pa to make sure pulse does not grab devices by itself.
