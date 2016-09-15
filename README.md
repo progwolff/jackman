@@ -50,7 +50,7 @@ Copy `jackman.conf` to `$HOME/.config/`.
 
 Add devices to this config file and edit the parameters to your needs.
 
-Devices must be given as '<Alsa Short Name>,<Device Number>', e.g. 'HDA Intel MID,3'.
+Devices must be given as `<Alsa Short Name>,<Device Number>`, e.g. `HDA Intel MID,3`.
 
 `$ aplay -l` and `$ jack_control dpd <parameter>` might help to find the right values.
 
