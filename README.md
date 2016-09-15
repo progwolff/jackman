@@ -125,4 +125,4 @@ rlimit-rtprio = 9
 rlimit-rttime = 200000
 ```
 
-You may also want do comment out lines 38-58 in /etc/pulse/default.pa to make sure pulse does not grab devices by itself.
+You may also want to comment out lines 38-58 in /etc/pulse/default.pa to make sure pulse does not grab devices by itself.

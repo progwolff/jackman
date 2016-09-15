@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment[de_DE]=
+Comment=
+Exec=/usr/bin/jackman
+GenericName[de_DE]=
+GenericName=
+Icon=system-run
+MimeType=
+Name[de_DE]=
+Name=
+Path=/home/wolff/
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

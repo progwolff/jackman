@@ -20,10 +20,12 @@ package() {
   mkdir -p "$pkgdir/usr/bin"
   mkdir -p "$pkgdir/etc/udev/rules.d"
   mkdir -p "$pkgdir/etc/systemd/system/"
+  mkdir -p "$pkgdir/etc/xdg/autostart/"
   cp ../50-jackman.rules "$pkgdir/etc/udev/rules.d/"
   cp ../jackman "$pkgdir/usr/bin/"
   cp ../jackman_udev* "$pkgdir/usr/bin/"
   cp ../alsa* "$pkgdir/usr/bin/"
   cp ../*.service "$pkgdir/etc/systemd/system/"
+  cp ../*.desktop "$pkgdir/etc/xdg/autostart/"
 }
 

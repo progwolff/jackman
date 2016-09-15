@@ -8,4 +8,4 @@ ExecStart=/usr/bin/jackman_udev_plug %I &
 
 [Install]
 WantedBy=suspend.target
-WantedBy=multi-user.target
+

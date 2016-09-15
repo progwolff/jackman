@@ -79,6 +79,8 @@ function jack_apply_config {
 }
 
 function force_sm {
+    /usr/bin/killall jackd
+
     /usr/bin/timeout 1 /usr/bin/jack_control start
 	
     /usr/bin/timeout 1 /usr/bin/jack_control sm </dev/null >/dev/null 2>/dev/null
