@@ -31,6 +31,7 @@ parameters:
     -f force replace (see FORCEREPLACE in next section)
     -d set value for DEVICE
     -b set value for BLACKLIST, e.g. \\\"HDA Intel MID,3\\\"
+    -k use previously used card and refresh jackbus, alsa_in, alsa_out
     
 environment variables used by this script:
     ID_MODEL: model id of the device as given by udev
@@ -103,7 +104,7 @@ function popup {
     /usr/bin/echo "$1" &
 }
 
-while getopts "h?vfmndb:" opt; do
+while getopts "h?vfm:n:d:b:k" opt; do
     case "$opt" in
     h|\?)
         show_help
@@ -120,6 +121,8 @@ while getopts "h?vfmndb:" opt; do
     d)  DEVICE="$OPTARG"
         ;;
     b)  BLACKLIST=";$BLACKLIST;$OPTARG;"
+	;;
+    k)  keep=1
     esac
 done
 
@@ -148,6 +151,12 @@ NAME="$SHORTNAME ($CARD)"
 currentcard="$(jack_config device | grep -o -P '[0-9]' | head -1)"
 currentdevice="$(jack_config device | grep -o -P '[0-9]' | tail -n +2 | head -1)"
 currentname="$(cat /proc/asound/cards | grep "$currentcard \[" | grep -o -P '[^-]*' | tail -1 | sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g')"
+
+if [[ ! -z $keep ]]; then
+	CARD="$currentcard"
+	DEVICE="$currentdevice"
+	NAME="$currentname"
+fi
 
 #[[ verbose -gt 0 ]] && echo "current card: $currentcard, current device: $currentdevice, current name: $currentname"
 

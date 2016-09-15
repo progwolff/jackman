@@ -21,7 +21,7 @@
 ## arg 1:  the new package version
 ## arg 2:  the old package version
 post_upgrade() {
-	systemctl enable jackman_init.service
+	systemctl enable jackman_plug@" ".service
 }
 
 ## arg 1:  the old package version
