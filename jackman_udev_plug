@@ -2,7 +2,13 @@
 
 /usr/bin/echo "--$(date) jackman_udev--" >> /var/log/jackman.log
 
-jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
+while [[ -z $jackuser ]]; do
+	jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
+	[[ -z $jackuser ]] && [[ ! $USER = "root" ]] && jackuser=$USER
+	[[ -z $jackuser ]] && jackuser=$(/usr/bin/users | cut -d ' ' -f 1)
+	[[ -z $jackuser ]] && /usr/bin/sleep 5
+done
+
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
 if [[ ! -z $1 ]]; then
     dev="$1"

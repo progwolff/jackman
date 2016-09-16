@@ -13,7 +13,8 @@ verbose=0
 configfile=".config/jackman.conf"
 
 jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
-[[ -z $jackuser ]] && jackuser=$USER
+[[ -z $jackuser ]] && [[ ! $USER = "root" ]] && jackuser=$USER
+[[ -z $jackuser ]] && jackuser=$(/usr/bin/users | cut -d ' ' -f 1)
 jackhome=$(eval /usr/bin/echo ~$jackuser)
 
 DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"

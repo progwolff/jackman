@@ -26,7 +26,6 @@ package() {
   cp ../jackman_udev* "$pkgdir/usr/bin/"
   cp ../alsa* "$pkgdir/usr/bin/"
   cp ../*.service "$pkgdir/usr/lib/systemd/system/"
-  cp ../*.desktop "$pkgdir/etc/xdg/autostart/"
   for d in `cd ../po; ls -1 *.po 2>/dev/null`; do
   	mkdir -p "$pkgdir/usr/share/locale/${d%.po}/LC_MESSAGES"
   	msgfmt -o "$pkgdir/usr/share/locale/${d%.po}/LC_MESSAGES/jackman.mo" ../po/${d} 

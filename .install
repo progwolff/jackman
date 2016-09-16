@@ -22,7 +22,6 @@
 ## arg 2:  the old package version
 post_upgrade() {
 	systemctl enable jackman_plug@" ".service
-	chmod +x "/etc/xdg/autostart/jackman.desktop"
 }
 
 ## arg 1:  the old package version
