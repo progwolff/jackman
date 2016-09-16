@@ -1,7 +1,7 @@
 [Desktop Entry]
 Comment[de_DE]=
 Comment=
-Exec=/usr/bin/jackman
+Exec=/usr/bin/jackman_udev_plug
 GenericName[de_DE]=
 GenericName=
 Icon=system-run
