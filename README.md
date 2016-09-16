@@ -41,9 +41,14 @@ Copy the following files:
 | `jackman_plug@.service`    | `/etc/systemd/system/`                   |
 | `jackman_unplug@.service`  | `/etc/systemd/system/`                   |
 | `jackman_init.service`     | `/etc/systemd/system/`                   |
+| `50-jackman.rules`         | `/etc/udev/rules.d/`                     |
+| `jackman.desktop`          | `/etc/xdg/autostart/`                    |
 
 Run 
-`# udevadm control -R`
+```
+# udevadm control -R
+# systemctl enable jackman_plug@" ".service
+```
 or reboot your system.
 
 # Configuration
