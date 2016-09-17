@@ -1,6 +1,8 @@
 # jackman
 Collection of scripts that help managing multiple audio interfaces with Jack
 
+![Build status](https://travis-ci.org/progwolff/jackman.svg "Build status")
+
 # Features
  
 - Persistent configurations per device
