@@ -19,6 +19,7 @@ manually.
 - systemd
 - jack
 - alsa-utils
+- cpulimit
 - kdialog [optional]
 - zenity [optional]
 
