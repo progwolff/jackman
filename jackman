@@ -95,8 +95,9 @@ function force_sm {
         /usr/bin/timeout 1 /usr/bin/jack_control sm </dev/null >/dev/null 2>/dev/null
         /usr/bin/timeout 1 /usr/bin/jack_control start 
     fi
-    if ! /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then 
-        /usr/bin/killall -9 -w jackdbus 
+    if ! /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then
+        /usr/bin/killall -9 -w jackdbus  
+        /usr/bin/timeout .3 /usr/bin/jack_control eps driver alsa
         jack_apply_config
         /usr/bin/timeout 1 /usr/bin/jack_control start </dev/null >/dev/null 2>/dev/null
     fi

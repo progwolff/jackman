@@ -6,7 +6,9 @@ After=suspend.target
 Type=forking
 ExecStart=/usr/bin/jackman_udev_plug %I &
 Restart=on-failure
-RestartSec=5
+RestartSec=20
+StartLimitInterval=100
+StartLimitBurst=3
 
 [Install]
 WantedBy=suspend.target
