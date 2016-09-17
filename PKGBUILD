@@ -8,7 +8,7 @@ url=''
 license=('GPL')
 #conflicts=()
 #provides=()
-depends=('jack2' 'alsa-utils' 'bash' 'systemd' 'coreutils')
+depends=('jack2' 'alsa-utils' 'bash' 'systemd' 'coreutils' 'cpulimit')
 makedepends=()
 optdepends=('zenity: system notifications'
 	   'kdebase-kdialog: system notifications')
