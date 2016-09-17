@@ -1,7 +1,7 @@
 # jackman
 Collection of scripts that help managing multiple audio interfaces with Jack
 
-![Build status](https://travis-ci.org/progwolff/jackman.svg "Build status")
+[![Build Status](https://travis-ci.org/progwolff/jackman.svg?branch=master)](https://travis-ci.org/progwolff/jackman)
 
 # Features
  
