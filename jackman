@@ -63,8 +63,8 @@ function add_inout {
         [[ $BLACKLIST =~ (^|;)"$name"($|;) ]] && continue
         #[[ verbose -gt 0 ]] && /usr/bin/echo "$cardline"
         [[ verbose -gt 0 ]] && /usr/bin/echo "`eval_gettext \"Attaching hw:\\\${card},\\\${device}.\"`"
-        /usr/bin/nohup /usr/bin/alsa_out -d "hw:${card},${device}" -j "${name} - out" & disown
-        /usr/bin/nohup /usr/bin/alsa_in -d "hw:${card},${device}" -j "${name} - in" & disown
+        /usr/bin/nohup /usr/bin/alsa_out -d "hw:${card},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null & disown
+        /usr/bin/nohup /usr/bin/alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null & disown
     done
     
     /usr/bin/jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (/usr/bin/pulseaudio -k && [[ verbose -gt 0 ]] && /usr/bin/echo "$(gettext "restarting pulseaudio")") &
@@ -250,7 +250,7 @@ else
         cns="$(/usr/bin/timeout .5 /usr/bin/jack_lsp -c)"
         IFS=',' read -ra cons <<< "${cns//$'\n'/,}"
             
-	/usr/bin/killall alsa_in
+        /usr/bin/killall alsa_in
         /usr/bin/killall alsa_out
 
 
@@ -259,16 +259,20 @@ else
             #popup "Device parameters did not change" &
             
             #exit if jack is running, force switch master if not.
-            /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null && /usr/bin/timeout .3 /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null
+            (/usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null && /usr/bin/timeout .3 /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null) || switchmaster=1
             
-        else
+        fi    
+        if [[ ! -z $switchmaster ]]; then
                         
             force_sm
 
             if ! /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then 
-                /usr/bin/kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Try again with other device parameters.")" -display ":0" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
-                /usr/bin/zenity --notification --display ":0" --text "$(gettext "Could not start jack.")"$'\n'"$(gettext "Try again with other device parameters.")" --title "$(gettext "Audio Interface")" --window-icon dialog-warning & 
-                die "$(gettext "Could not start jack.")"$'\n'"$(gettext "Try again with other device parameters.")"
+                /usr/bin/kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" -display ":0" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
+                /usr/bin/zenity --notification --display ":0" --text "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" --title "$(gettext "Audio Interface")" --window-icon dialog-warning & 
+                /usr/bin/echo "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")"
+                
+                $0 -vb "$BLACKLIST;${SHORTNAME},${device}"
+                exit 1
             fi
             
             if [[ -z $currentname ]]; then
