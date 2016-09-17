@@ -1,5 +1,5 @@
 # jackman
-Collection of scripts that help managing multiple audio interfaces with Jack
+Collection of scripts that help managing multiple audio interfaces with [Jack](https://github.com/jackaudio).
 
 [![Build Status](https://travis-ci.org/progwolff/jackman.svg?branch=master)](https://travis-ci.org/progwolff/jackman)
 
@@ -21,7 +21,6 @@ manually.
 - systemd
 - jack
 - alsa-utils
-- cpulimit
 - kdialog [optional]
 - zenity [optional]
 
