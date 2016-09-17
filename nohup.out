@@ -1,0 +1,102 @@
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+/usr/bin/cpulimit: invalid option -- 'k'
+Capture open error: No such file or directory
+Capture open error: No such file or directory
+Capture open error: No such file or directory
+Capture open error: No such file or directory
+Capture open error: Device or resource busy
+Capture open error: Device or resource busy
+Cannot read socket fd = 3 err = Connection reset by peer
+Cannot read socket fd = 3 err = Connection reset by peer
+Could not read result type = 7
+Cannot read socket fd = 5 err = Success
+Cannot read socket fd = 5 err = Success
+Could not read result type = 7
+CheckRes error
+JackSocketClientChannel read fail
+CheckRes error
+Cannot read socket fd = 5 err = Success
+Cannot read socket fd = 3 err = Connection reset by peer
+Cannot read socket fd = 3 err = Interrupted system call
+Could not read result type = 7
+selected sample format: 32bit
+delay = -41
+Could not read result type = 7
+JackSocketClientChannel read fail
+CheckRes error
+JackSocketClientChannel read fail
+Cannot read socket fd = 3 err = Connection reset by peer
+Could not read result type = 7
+Cannot read socket fd = 5 err = Success
+selected sample format: 32bit
+delay = 3413
+selected sample format: 32bit
+Cannot read socket fd = 5 err = Success
+CheckRes error
+JackSocketClientChannel read fail
+Cannot write socket fd = 3 err = Broken pipe
+CheckRes error
+CheckRes error
+Could not write request type = 24
+Cannot write socket fd = 3 err = Broken pipe
+CheckRes error
+CheckRes error
+Could not write request type = 24
+terminate called without an active exception
+selected sample format: 32bit
+selected sample format: 32bit
+selected sample format: 32bit

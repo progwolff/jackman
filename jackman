@@ -63,8 +63,8 @@ function add_inout {
         [[ $BLACKLIST =~ (^|;)"$name"($|;) ]] && continue
         #[[ verbose -gt 0 ]] && /usr/bin/echo "$cardline"
         [[ verbose -gt 0 ]] && /usr/bin/echo "`eval_gettext \"Attaching hw:\\\${card},\\\${device}.\"`"
-        /usr/bin/nohup /usr/bin/cpulimit -l 25 -k /usr/bin/alsa_out -d "hw:${card},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null & disown
-        /usr/bin/nohup /usr/bin/cpulimit -l 25 -k /usr/bin/alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null & disown
+        /usr/bin/nohup /usr/bin/alsa_out -d "hw:${card},${device}" -j "${name} - out" & disown
+        /usr/bin/nohup /usr/bin/alsa_in -d "hw:${card},${device}" -j "${name} - in" & disown
     done
     
     /usr/bin/jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (/usr/bin/pulseaudio -k && [[ verbose -gt 0 ]] && /usr/bin/echo "$(gettext "restarting pulseaudio")") &
@@ -250,6 +250,10 @@ else
         cns="$(/usr/bin/timeout .5 /usr/bin/jack_lsp -c)"
         IFS=',' read -ra cons <<< "${cns//$'\n'/,}"
             
+	/usr/bin/killall alsa_in
+        /usr/bin/killall alsa_out
+
+
         #don't switch master if nothing changed
         if [[ -z $switchmaster ]]; then
             #popup "Device parameters did not change" &
@@ -258,10 +262,7 @@ else
             /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null && /usr/bin/timeout .3 /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null
             
         else
-            
-            /usr/bin/killall alsa_in
-            /usr/bin/killall alsa_out
-            
+                        
             force_sm
 
             if ! /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then 
