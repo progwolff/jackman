@@ -68,7 +68,7 @@ function add_inout {
     done
     
     /usr/bin/jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (/usr/bin/pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
-    [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(Hz)") = $(/usr/bin/jack_samplerate) ]] && (/usr/bin/pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
+    [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(?=Hz)") = $(/usr/bin/jack_samplerate) ]] && (/usr/bin/pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
     
 }
 
