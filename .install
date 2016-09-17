@@ -8,9 +8,9 @@
 #}
 
 ## arg 1:  the new package version
-#post_install() {
-	# do something here
-#}
+post_install() {
+	systemctl enable jackman_plug@" ".service
+}
 
 ## arg 1:  the new package version
 ## arg 2:  the old package version
