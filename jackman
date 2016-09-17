@@ -67,7 +67,9 @@ function add_inout {
         /usr/bin/nohup /usr/bin/alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null & disown
     done
     
-    /usr/bin/jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (/usr/bin/pulseaudio -k && [[ verbose -gt 0 ]] && /usr/bin/echo "$(gettext "restarting pulseaudio")") &
+    /usr/bin/jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (/usr/bin/pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
+    [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(Hz)") = $(/usr/bin/jack_samplerate) ]] && (/usr/bin/pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
+    
 }
 
 function jack_apply_config {
