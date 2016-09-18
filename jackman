@@ -3,7 +3,7 @@
 export TEXTDOMAINDIR=/usr/share/locale
 export TEXTDOMAIN=jackman
 
-. /usr/bin/gettext.sh
+. gettext.sh
 
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
@@ -14,15 +14,15 @@ configfile=".config/jackman.conf"
 
 jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
 [[ -z $jackuser ]] && [[ ! $USER = "root" ]] && jackuser=$USER
-[[ -z $jackuser ]] && jackuser=$(/usr/bin/users | cut -d ' ' -f 1)
-jackhome=$(eval /usr/bin/echo ~$jackuser)
+[[ -z $jackuser ]] && jackuser=$(users | cut -d ' ' -f 1)
+jackhome=$(eval echo ~$jackuser)
 
 DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
 
 function die { echo "$@" 1>&2 ; exit 1; }
 
 function show_help {
-    /usr/bin/echo "`eval_gettext \"this script configures the audio device given by environment variables \\$DEVNAME and \\$ID_MODEL (see udev parameter description) or the device with highest priority as jackdbus master if it has a higher priority than the current master (as specified in \\$HOME/\\\${configfile}), starts jackdbus and adds alsa_in and alsa_out devices for all other audio devices.
+    echo "`eval_gettext \"this script configures the audio device given by environment variables \\$DEVNAME and \\$ID_MODEL (see udev parameter description) or the device with highest priority as jackdbus master if it has a higher priority than the current master (as specified in \\$HOME/\\\${configfile}), starts jackdbus and adds alsa_in and alsa_out devices for all other audio devices.
 
 parameters:
     -h show this
@@ -51,7 +51,7 @@ common issues:
 
 
 function add_inout {
-    cardlines=$(LANG= /usr/bin/aplay -l | grep card | grep device)
+    cardlines=$(LANG= aplay -l | grep card | grep device)
     printf '%s\n' "$cardlines" | while IFS= read -r cardline; do
         card=$(grep -o -P '(?<=card )[0-9]*' <<< "$cardline")
         device=$(grep -o -P '(?<=device )[0-9]*' <<< "$cardline")
@@ -61,14 +61,14 @@ function add_inout {
         name="${name},${device}"
         [[ -z $card ]] && continue
         [[ $BLACKLIST =~ (^|;)"$name"($|;) ]] && continue
-        #[[ verbose -gt 0 ]] && /usr/bin/echo "$cardline"
-        [[ verbose -gt 0 ]] && /usr/bin/echo "`eval_gettext \"Attaching hw:\\\${card},\\\${device}.\"`"
-        /usr/bin/nohup /usr/bin/alsa_out -d "hw:${card},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null & disown
-        /usr/bin/nohup /usr/bin/alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null & disown
+        #[[ verbose -gt 0 ]] && echo "$cardline"
+        [[ verbose -gt 0 ]] && echo "`eval_gettext \"Attaching hw:\\\${card},\\\${device}.\"`"
+        nohup alsa_out -d "hw:${card},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null & disown
+        nohup alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null & disown
     done
     
-    /usr/bin/jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (/usr/bin/pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
-    [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(?=Hz)") = $(/usr/bin/jack_samplerate) ]] && (/usr/bin/pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
+    jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
+    [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(?=Hz)") = $(jack_samplerate) ]] && (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
     
 }
 
@@ -77,29 +77,29 @@ function jack_apply_config {
     IFS=';' read -ra configs <<< "$confline"		
     for i in "${configs[@]}"; do
         IFS='=' read -ra conf <<< "$i"
-        /usr/bin/timeout .3 /usr/bin/jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null || return 1
+        timeout .3 jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null || return 1
     done
 }
 
 function force_sm {
-    /usr/bin/killall jackd
+    killall jackd
 
-    /usr/bin/timeout 1 /usr/bin/jack_control start
+    timeout 1 jack_control start
 	
-    /usr/bin/timeout 1 /usr/bin/jack_control sm </dev/null >/dev/null 2>/dev/null
+    timeout 1 jack_control sm </dev/null >/dev/null 2>/dev/null
     
-    if ! /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null\
-           || ! /usr/bin/timeout .3 /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null; then 
-        /usr/bin/timeout 1 /usr/bin/jack_control exit
+    if ! timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null\
+           || ! timeout .3 jack_samplerate </dev/null >/dev/null 2>/dev/null; then 
+        timeout 1 jack_control exit
         jack_apply_config
-        /usr/bin/timeout 1 /usr/bin/jack_control sm </dev/null >/dev/null 2>/dev/null
-        /usr/bin/timeout 1 /usr/bin/jack_control start 
+        timeout 1 jack_control sm </dev/null >/dev/null 2>/dev/null
+        timeout 1 jack_control start 
     fi
-    if ! /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then
-        /usr/bin/killall -9 -w jackdbus  
-        /usr/bin/timeout .3 /usr/bin/jack_control eps driver alsa
+    if ! timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null; then
+        killall -9 -w jackdbus  
+        timeout .3 jack_control eps driver alsa
         jack_apply_config
-        /usr/bin/timeout 1 /usr/bin/jack_control start </dev/null >/dev/null 2>/dev/null
+        timeout 1 jack_control start </dev/null >/dev/null 2>/dev/null
     fi
 }
 
@@ -110,9 +110,9 @@ function jack_config {
 }
 
 function popup {
-    /usr/bin/kdialog --passivepopup "$@" -display ":0" 10 --title "$(gettext "Audio Interface")" --icon audio-card || \
-    /usr/bin/zenity --notification --display ":0" --text "$1" --title "$(gettext "Audio Interface")" --window-icon audio-card || \
-    /usr/bin/echo "$1" &
+    kdialog --passivepopup "$@" -display ":0" 10 --title "$(gettext "Audio Interface")" --icon audio-card || \
+    zenity --notification --display ":0" --text "$1" --title "$(gettext "Audio Interface")" --window-icon audio-card || \
+    echo "$1" &
 }
 
 while getopts "h?vfm:n:d:b:k" opt; do
@@ -142,6 +142,9 @@ shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
 
+$BLACKLIST=${BLACKLIST//;;/;}
+
+
 CARD=${DEVNAME//[!0-9]/ }
 CARD=$(tr -s [:space:] <<< ${CARD})
 CARD=${CARD// /,}
@@ -151,18 +154,21 @@ CARD=${CARD// /,}
 
 SHORTNAME="${ID_MODEL//_/ }"
 NAME="$SHORTNAME ($CARD)"
-[[ verbose -gt 0 ]] && ( [[ -z $ID_MODEL ]] && /usr/bin/echo "$(gettext "no card given, using card with highest priority")" || /usr/bin/echo "$(gettext "using card $NAME")" )
 
-[[ verbose -gt 0 ]] && /usr/bin/echo "`eval_gettext \"jack user is \\\${jackuser}\"`"
+[[ verbose -gt 0 ]] && ( [[ -z $ID_MODEL ]] && echo "$(gettext "no card given, using card with highest priority")" || echo "$(gettext "using card $NAME")" )
+
+[[ verbose -gt 0 ]] && echo "`eval_gettext \"jack user is \\\${jackuser}\"`"
 
 
 # if jack is not running yet, replace current config and force jack to start
-/usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null || FORCEREPLACE=1
+timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null || FORCEREPLACE=1
 
+# get old jack device from jack config
 currentcard="$(jack_config device | grep -o -P '[0-9]' | head -1)"
 currentdevice="$(jack_config device | grep -o -P '[0-9]' | tail -n +2 | head -1)"
 currentname="$(cat /proc/asound/cards | grep "$currentcard \[" | grep -o -P '[^-]*' | tail -1 | sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g')"
 
+# if we can not find a new card or -k was set, keep old card and refresh
 if [[ ! -z $keep ]] && [[ ! -z $currentcard ]]; then
 	CARD="$currentcard"
 	DEVICE="$currentdevice"
@@ -171,30 +177,31 @@ fi
 
 #[[ verbose -gt 0 ]] && echo "current card: $currentcard, current device: $currentdevice, current name: $currentname"
 
-[[ verbose -gt 0 ]] && /usr/bin/echo "`eval_gettext \"reading config from \\\$jackhome/\\\${configfile}\"`"
+[[ verbose -gt 0 ]] && echo "`eval_gettext \"reading config from \\\$jackhome/\\\${configfile}\"`"
 
-[[ verbose -gt 0 ]] && [[ ! -z $BLACKLIST ]] && /usr/bin/echo "$(gettext "blacklisted devices:")"" ${BLACKLIST//;/$'\n'$'\t'}"
+[[ verbose -gt 0 ]] && [[ ! -z $BLACKLIST ]] && echo "$(gettext "blacklisted devices:")"" ${BLACKLIST//;/$'\n'$'\t'}"
 
+# find the device with highest priority
 oldprio=$(grep "${currentname},${currentdevice}=" "$jackhome/${configfile}" | grep -o -P '(?<=priority=)[0-9]*' | head -1)
 [[ $BLACKLIST =~ (^|;)"${currentname},${currentdevice}"($|;) ]] && oldprio=99
 
 conflines=$(grep "${SHORTNAME},${DEVICE}" "$jackhome/${configfile}")
 prio=9999
-[[ verbose -gt 0 ]] && /usr/bin/echo "$(gettext "have config for: ")"$'\n'
+[[ verbose -gt 0 ]] && echo "$(gettext "have config for: ")"$'\n'
 while read -r line; do
     newprio=$(grep -o -P '(?<=priority=)[0-9]*' <<< "$line")
     device=$(cut -d '=' -f 1 <<< ${line})
     shortname=$(cut -d ',' -f 1 <<< ${device})
-    [[ verbose -gt 0 ]] && [[ ! -z ${device} ]] && /usr/bin/echo $'\t'"${device}"
-    if [[ ! $BLACKLIST =~ (^|;)"$device"($|;) ]] && [[ $newprio -lt $prio ]] && [[ $(grep "${shortname}" <<< $(/usr/bin/aplay -l)) ]]; then
-        #/usr/bin/echo "prio: $newprio"
+    [[ verbose -gt 0 ]] && [[ ! -z ${device} ]] && echo $'\t'"${device}"
+    if [[ ! $BLACKLIST =~ (^|;)"$device"($|;) ]] && [[ $newprio -lt $prio ]] && [[ $(grep "${shortname}" <<< $(aplay -l)) ]]; then
+        #echo "prio: $newprio"
         confline="$line"
         prio=$newprio
     fi
 done <<< "$conflines"
 
 device=$(cut -d '=' -f 1 <<< ${confline})
-[[ verbose -gt 0 ]] && /usr/bin/echo $'\n'"`eval_gettext \"using \\\$device\"`"
+[[ verbose -gt 0 ]] && echo $'\n'"`eval_gettext \"using \\\$device\"`"
 
 if [[ -z $CARD ]]; then
     SHORTNAME=$(cut -d ',' -f 1 <<< ${device})
@@ -203,8 +210,9 @@ fi
 device=$(cut -d ',' -f 2 <<< ${device})
 
 
-[[ verbose -gt 0 ]] && /usr/bin/echo "`eval_gettext \"old card's priority was \\\${oldprio}. new card's best priority is \\\${prio}\"`"
-[[ ! -z $FORCEREPLACE ]] && FORCEREPLACE=1 && [[ verbose -gt 0 ]] && /usr/bin/echo "$(gettext "replacing forced.")"
+[[ verbose -gt 0 ]] && echo "`eval_gettext \"old card's priority was \\\${oldprio}. new card's best priority is \\\${prio}\"`"
+
+[[ ! -z $FORCEREPLACE ]] && FORCEREPLACE=1 && [[ verbose -gt 0 ]] && echo "$(gettext "replacing forced.")"
 
 [[ -z $oldprio ]] && oldprio=9999 
 
@@ -225,15 +233,15 @@ else
         confline=$(cut -d '=' -f 2- <<< ${confline})
         confline="${confline};device=hw:$CARD,$device"
         
-        [[ verbose -gt 0 ]] && [[ -z $keep ]] && /usr/bin/echo "$(gettext "using config:")"$'\n'$'\n'$'\t'"${confline//;/$'\n'$'\t'}" 
+        [[ verbose -gt 0 ]] && [[ -z $keep ]] && echo "$(gettext "using config:")"$'\n'$'\n'$'\t'"${confline//;/$'\n'$'\t'}" 
 
-        /usr/bin/timeout 1 /usr/bin/jack_control start </dev/null >/dev/null 2>/dev/null
+        timeout 1 jack_control start </dev/null >/dev/null 2>/dev/null
 	        
         if [[ -z $keep ]]; then
             IFS=';' read -ra configs <<< "$confline"		
             for i in "${configs[@]}"; do
                     IFS='=' read -ra conf <<< "$i"
-                    oldval=$(jack_config ${conf[0]// /})
+                    oldval=$(jack_config ${conf[0]// /} | head -1)
                     newval=${conf[1]}
                     if [ "$oldval" != "$newval" ]; then
                         if [[ ! "period,priority" =~ "${conf[0]// /}" ]]; then
@@ -241,20 +249,23 @@ else
                             switchmaster=1
                         else
                             if [[ "period" = "${conf[0]// /}" ]]; then
-                                /usr/bin/timeout .5 /usr/bin/jack_bufsize "$newval"
+                                timeout .5 jack_bufsize "$newval"
                                 popup "`eval_gettext \"Buffer size changed from \\\${oldval} to \\\${newval}.\"`"
                             fi
                         fi
                     fi
-                    /usr/bin/timeout .3 /usr/bin/jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null
+                    timeout .3 jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null || break
             done
         fi
         
-        cns="$(/usr/bin/timeout .5 /usr/bin/jack_lsp -c)"
+        # get current jack connections, restore them later
+        cns="$(timeout .5 jack_lsp -c)"
         IFS=',' read -ra cons <<< "${cns//$'\n'/,}"
             
-        /usr/bin/killall alsa_in
-        /usr/bin/killall alsa_out
+        
+        # killall alsa_in/alsa_out as they might be consuming 100% CPU after waking up from suspend. TODO: handle them in a smarter way...
+        killall alsa_in
+        killall alsa_out
 
 
         #don't switch master if nothing changed
@@ -262,19 +273,23 @@ else
             #popup "Device parameters did not change" &
             
             #exit if jack is running, force switch master if not.
-            (/usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null && /usr/bin/timeout .3 /usr/bin/jack_samplerate </dev/null >/dev/null 2>/dev/null) || switchmaster=1
+            (timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null && timeout .3 jack_samplerate </dev/null >/dev/null 2>/dev/null) || switchmaster=1
             
         fi    
         if [[ ! -z $switchmaster ]]; then
                         
+            # switch master or force replace
             force_sm
 
-            if ! /usr/bin/timeout .3 /usr/bin/jack_control status </dev/null >/dev/null 2>/dev/null; then 
-                /usr/bin/kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" -display ":0" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
-                /usr/bin/zenity --notification --display ":0" --text "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" --title "$(gettext "Audio Interface")" --window-icon dialog-warning & 
-                /usr/bin/echo "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")"
+            # try next device if jack could not be started
+            if ! timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null; then 
+                kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" -display ":0" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
+                zenity --notification --display ":0" --text "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" --title "$(gettext "Audio Interface")" --window-icon dialog-warning & 
+                echo "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")"
                 
-                $0 -vb "$BLACKLIST;${SHORTNAME},${device}"
+                # run this script with current device blacklisted
+                $0 -vb "${BLACKLIST};${SHORTNAME},${device}"
+                
                 exit 1
             fi
             
@@ -288,16 +303,17 @@ else
         
         add_inout
         
+        # restore previously saved jack connections
         for ((i=0; i<${#cons[@]}; i++)); do
                 firstchar=${cons[$i]:0:1}
-                cons[$i]=$(/usr/bin/echo "${cons[$i]}" | sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g')
+                cons[$i]=$(echo "${cons[$i]}" | sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g')
                 whitespace=$(printf '\n\t ')
                 case "$firstchar" in
                     *[!$whitespace]*) master="${cons[$i]}"
-                        #/usr/bin/echo "master \"$master\"..."
+                        #echo "master \"$master\"..."
                         ;;
-                    *) /usr/bin/jack_connect "${cons[$i]}" "$master">/dev/null 2>&1
-                        #/usr/bin/echo "connecting \"${cons[$i]}\" to \"$master\"";;
+                    *) jack_connect "${cons[$i]}" "$master">/dev/null 2>&1
+                        #echo "connecting \"${cons[$i]}\" to \"$master\"";;
                 esac
         done
 
