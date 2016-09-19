@@ -85,7 +85,7 @@ function force_sm {
     killall jackd
 
     timeout 1 jack_control start
-	
+
     timeout 1 jack_control sm </dev/null >/dev/null 2>/dev/null
     
     if ! timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null\
@@ -142,7 +142,7 @@ shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
 
-$BLACKLIST=${BLACKLIST//;;/;}
+BLACKLIST=${BLACKLIST//;;/;}
 
 
 CARD=${DEVNAME//[!0-9]/ }
@@ -170,9 +170,9 @@ currentname="$(cat /proc/asound/cards | grep "$currentcard \[" | grep -o -P '[^-
 
 # if we can not find a new card or -k was set, keep old card and refresh
 if [[ ! -z $keep ]] && [[ ! -z $currentcard ]]; then
-	CARD="$currentcard"
-	DEVICE="$currentdevice"
-	NAME="$currentname"
+    CARD="$currentcard"
+    DEVICE="$currentdevice"
+    NAME="$currentname"
 fi
 
 #[[ verbose -gt 0 ]] && echo "current card: $currentcard, current device: $currentdevice, current name: $currentname"
@@ -319,3 +319,4 @@ else
 
 fi
 
+exit 0

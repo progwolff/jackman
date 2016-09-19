@@ -20,13 +20,13 @@ if [[ ! -z $1 ]]; then
 fi
 
 if [ ! -z $CARD ]; then
-	currentcard="$(cat $jackhome/.config/jack/conf.xml | grep device | grep -o -P '[0-9]' | head -1)"
-	currentdevice="$(cat $jackhome/.config/jack/conf.xml | grep device | grep -o -P '[0-9]' | tail -n +2 | head -1)"
-        currentname="$(cat /proc/asound/cards | grep "$currentcard \[" | grep -o -P '[^-]*' | tail -1 | sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g')"
+    currentcard="$(cat $jackhome/.config/jack/conf.xml | grep device | grep -o -P '[0-9]' | head -1)"
+    currentdevice="$(cat $jackhome/.config/jack/conf.xml | grep device | grep -o -P '[0-9]' | tail -n +2 | head -1)"
+    currentname="$(cat /proc/asound/cards | grep "$currentcard \[" | grep -o -P '[^-]*' | tail -1 | sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g')"
 
-	
-	if [[ $currentcard -eq $CARD ]]; then
-	
+    
+    if [[ $currentcard -eq $CARD ]]; then
+    
             msg="`eval_gettext \"Removed card \\\${currentcard}. Trying to switch master...\"`"
             su $jackuser - -c "/usr/bin/kdialog --passivepopup \"$msg\" -display \":0\" 10 --title \"$(gettext "Audio Interface")\" --icon audio-card || \
             /usr/bin/zenity --notification --text \"$msg\" --display \":0\" --title \"$(gettext "Audio Interface")\" --window-icon audio-card || \
@@ -63,5 +63,5 @@ if [ ! -z $CARD ]; then
                 /usr/bin/kill -9 $(grep -o -P '[0-9]*' <<< "$line" | head -1) & disown
             done <<< "$proclines"
              
-	fi;
+    fi;
 fi

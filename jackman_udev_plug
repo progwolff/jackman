@@ -3,18 +3,18 @@
 /usr/bin/echo "--$(date) jackman_udev--" >> /var/log/jackman.log
 
 while [[ -z $jackuser ]]; do
-	jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
-	[[ -z $jackuser ]] && [[ ! $USER = "root" ]] && jackuser=$USER
-	[[ -z $jackuser ]] && jackuser=$(/usr/bin/users | cut -d ' ' -f 1)
-	[[ -z $jackuser ]] && /usr/bin/sleep 5
+    jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
+    [[ -z $jackuser ]] && [[ ! $USER = "root" ]] && jackuser=$USER
+    [[ -z $jackuser ]] && jackuser=$(/usr/bin/users | cut -d ' ' -f 1)
+    [[ -z $jackuser ]] && /usr/bin/sleep 5
 done
 
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
 if [[ ! -z $1 ]]; then
     dev="$1"
     /usr/bin/echo "arg: $1" >> /var/log/jackman.log
-    ID_MODEL=$(udevadm info ${dev//-/\/} | grep "ID_MODEL=" | rev | cut -d"=" -f 1 | rev)
-    DEVNAME=$(udevadm info ${dev//-/\/} | grep "DEVNAME=" | rev | cut -d"=" -f 1 | rev)
+    ID_MODEL=$(/usr/bin/udevadm info ${dev//-/\/} | grep "ID_MODEL=" | rev | cut -d"=" -f 1 | rev)
+    DEVNAME=$(/usr/bin/udevadm info ${dev//-/\/} | grep "DEVNAME=" | rev | cut -d"=" -f 1 | rev)
 fi
 DISPLAY=":0"
 
@@ -25,9 +25,9 @@ if [[ ! -z $ID_MODEL ]]; then
     if ( [[ -z $thisuser ]] || [[ ! $thisuser == $jackuser ]] ); then
         /usr/bin/echo "running with su" >> /var/log/jackman.log
         if [[ $(grep audio <<< $(id $jackuser -Gn)) ]]; then
-            /usr/bin/su $jackuser - -g audio -c "DEVICE=\"$DEVICE\" DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" DEVNAME=\"$DEVNAME\" ID_MODEL=\"$ID_MODEL\" FORCEREPLACE=\"$FORCEREPLACE\" /usr/bin/jackman -v" >> /var/log/jackman.log 2>&1
+            /usr/bin/su $jackuser - -g audio -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -d\"$DEVICE\" -n\"$DEVNAME\" -m\"$ID_MODEL\" -f -v" >> /var/log/jackman.log 2>&1
         else
-            /usr/bin/su $jackuser - -c "DEVICE=\"$DEVICE\" DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" DEVNAME=\"$DEVNAME\" ID_MODEL=\"$ID_MODEL\" FORCEREPLACE=\"$FORCEREPLACE\" /usr/bin/jackman -v" >> /var/log/jackman.log 2>&1
+            /usr/bin/su $jackuser - -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -d\"$DEVICE\" -n\"$DEVNAME\" -m\"$ID_MODEL\" -f -v" >> /var/log/jackman.log 2>&1
         fi
         if ! /usr/bin/su $jackuser - -c '/usr/bin/jack_control status'; then exit 1; fi
     else
