@@ -25,7 +25,7 @@ DISPLAY=":0"
 
 if [[ ! -z $ID_MODEL ]]; then
 
-    if [[ $hotplug = "false" ]] || [[ $hotplug -eq 0 ]]; then
+    if [[ $hotplug = "false" ]] || [[ $hotplug = "0" ]]; then
         exit 0
     fi
 
