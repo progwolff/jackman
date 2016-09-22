@@ -104,8 +104,8 @@ function force_sm {
 }
 
 function jack_config {
-    keys=$(cat $jackhome/.config/jack/conf.xml | grep "option name" | grep "\"$1\"" | grep -o -P '(?<=name=")[^"]*')
-    values=$(cat $jackhome/.config/jack/conf.xml | grep "option name" | grep "\"$1\"" | grep -o -P '(?<=>)[^<]*')
+    keys=$(grep "option name" $jackhome/.config/jack/conf.xml | grep "\"$1\"" | grep -o -P '(?<=name=")[^"]*')
+    values=$(grep "option name" $jackhome/.config/jack/conf.xml | grep "\"$1\"" | grep -o -P '(?<=>)[^<]*')
     echo "$values"
 }
 
@@ -166,7 +166,7 @@ timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null || FORCEREPLACE
 # get old jack device from jack config
 currentcard="$(jack_config device | grep -o -P '[0-9]' | head -1)"
 currentdevice="$(jack_config device | grep -o -P '[0-9]' | tail -n +2 | head -1)"
-currentname="$(cat /proc/asound/cards | grep "$currentcard \[" | grep -o -P '[^-]*' | tail -1 | sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g')"
+currentname="$(grep "$currentcard \[" /proc/asound/cards | grep -o -P '[^-]*' | tail -1 | sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g')"
 
 # if we can not find a new card or -k was set, keep old card and refresh
 if [[ ! -z $keep ]] && [[ ! -z $currentcard ]]; then
@@ -217,12 +217,17 @@ device=$(cut -d ',' -f 2 <<< ${device})
 [[ -z $oldprio ]] && oldprio=9999 
 
 if [[ -z $FORCEREPLACE ]] && ( [[ ! -z $prio ]] && [[ $prio -gt $oldprio ]] ); then
-        [[ verbose -gt 0 ]] && echo "$(gettext "attaching alsa_in and alsa_out...")"
 
-        add_inout
-
-        popup "`eval_gettext \"Attached \\\${SHORTNAME}.\"`" &
-
+        inout=$(grep -o -P '(?<=attach_others=).*' < ${jackhome}/.config/jackman.conf)
+        
+        if [[ $inout = "false" ]] || [[ $inout -eq 0 ]]; then
+            [[ verbose -gt 0 ]] && echo "$(gettext "not attaching alsa_in and alsa_out as it's disabled in config file")"
+        else
+            [[ verbose -gt 0 ]] && echo "$(gettext "attaching alsa_in and alsa_out...")"
+            add_inout            
+            popup "`eval_gettext \"Attached \\\${SHORTNAME}.\"`" &
+        fi
+        
 else
         [[ verbose -gt 0 ]] && echo "$(gettext "replacing...")"
         
@@ -301,7 +306,14 @@ else
         
         fi
         
-        add_inout
+        inout=$(grep -o -P '(?<=attach_others=).*' < ${jackhome}/.config/jackman.conf)
+        
+        if [[ $inout = "false" ]] || [[ $inout -eq 0 ]]; then
+            [[ verbose -gt 0 ]] && echo "$(gettext "not attaching alsa_in and alsa_out as it's disabled in config file")"
+        else
+            [[ verbose -gt 0 ]] && echo "$(gettext "attaching alsa_in and alsa_out...")"
+            add_inout            
+        fi
         
         # restore previously saved jack connections
         for ((i=0; i<${#cons[@]}; i++)); do
