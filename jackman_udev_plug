@@ -13,7 +13,7 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
 
 jackhome=$(eval echo ~$jackuser)
 
-hotplug=$(grep -o -P '(?<=hotplug=).*' < ${jackhome}/.config/jackman.conf)
+hotplug=$(grep -o -P '(?<=hotplug=).*' ${jackhome}/.config/jackman.conf)
 
 if [[ ! -z $1 ]]; then
     dev="$1"
