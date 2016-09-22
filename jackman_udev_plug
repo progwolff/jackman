@@ -15,10 +15,6 @@ jackhome=$(eval echo ~$jackuser)
 
 hotplug=$(grep -o -P '(?<=hotplug=).*' < ${jackhome}/.config/jackman.conf)
 
-if [[ $hotplug = "false" ]] || [[ $hotplug -eq 0 ]]; then
-    exit 0
-fi
-
 if [[ ! -z $1 ]]; then
     dev="$1"
     /usr/bin/echo "arg: $1" >> /var/log/jackman.log
@@ -28,6 +24,11 @@ fi
 DISPLAY=":0"
 
 if [[ ! -z $ID_MODEL ]]; then
+
+    if [[ $hotplug = "false" ]] || [[ $hotplug -eq 0 ]]; then
+        exit 0
+    fi
+
     /usr/bin/echo "Device: $ID_MODEL,$DEVICE" >> /var/log/jackman.log
     thisuser=$(/usr/bin/id -un)
     /usr/bin/echo "this user is \"${thisuser}\". jack user is \"${jackuser}\"" >> /var/log/jackman.log
