@@ -82,6 +82,7 @@ function jack_apply_config {
 }
 
 function force_sm {
+    
     killall jackd
 
     timeout 1 jack_control start
@@ -90,6 +91,8 @@ function force_sm {
     
     if ! timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null\
            || ! timeout .3 jack_samplerate </dev/null >/dev/null 2>/dev/null; then 
+        killall -9 -w alsa_in
+        killall -9 -w alsa_out
         timeout 1 jack_control exit
         jack_apply_config
         timeout 1 jack_control sm </dev/null >/dev/null 2>/dev/null
