@@ -78,6 +78,8 @@ function jack_apply_config {
     for i in "${configs[@]}"; do
         IFS='=' read -ra conf <<< "$i"
         timeout .3 jack_control dps "${conf[0]// /}" "${conf[1]}" </dev/null >/dev/null 2>/dev/null || return 1
+        [[ ${conf[0]// /} = "inchannels" ]] && [[ ${conf[1]} = "0" ]] && timeout .3 jack_control dpr "${conf[0]// /}" &
+        [[ ${conf[0]// /} = "outchannels" ]] && [[ ${conf[1]} = "0" ]] && timeout .3 jack_control dpr "${conf[0]// /}" &
     done
 }
 
