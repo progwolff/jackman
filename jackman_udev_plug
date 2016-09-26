@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/usr/bin/echo "--$(date) jackman_udev--" >> /var/log/jackman.log
+/usr/bin/echo "--$(date) jackman_udev_plug--" >> /var/log/jackman.log
 
 while [[ -z $jackuser ]]; do
     jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
@@ -11,7 +11,7 @@ done
 
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
 
-jackhome=$(eval echo ~$jackuser)
+jackhome=$(eval /usr/bin/echo ~$jackuser)
 
 hotplug=$(grep -o -P '(?<=hotplug=).*' ${jackhome}/.config/jackman.conf)
 
@@ -35,9 +35,9 @@ if [[ ! -z $ID_MODEL ]]; then
     if ( [[ -z $thisuser ]] || [[ ! $thisuser == $jackuser ]] ); then
         /usr/bin/echo "running with su" >> /var/log/jackman.log
         if [[ $(grep audio <<< $(id $jackuser -Gn)) ]]; then
-            /usr/bin/su $jackuser - -g audio -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -d\"$DEVICE\" -n\"$DEVNAME\" -m\"$ID_MODEL\" -f -v" >> /var/log/jackman.log 2>&1
+            /usr/bin/su $jackuser - -g audio -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -n\"$DEVNAME\" -m\"$ID_MODEL\" -f -v " >> /var/log/jackman.log 2>&1
         else
-            /usr/bin/su $jackuser - -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -d\"$DEVICE\" -n\"$DEVNAME\" -m\"$ID_MODEL\" -f -v" >> /var/log/jackman.log 2>&1
+            /usr/bin/su $jackuser - -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -n\"$DEVNAME\" -m\"$ID_MODEL\" -f -v " >> /var/log/jackman.log 2>&1
         fi
         if ! /usr/bin/su $jackuser - -c '/usr/bin/jack_control status'; then exit 1; fi
     else

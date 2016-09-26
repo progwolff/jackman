@@ -6,7 +6,7 @@ export TEXTDOMAIN=jackman
 
 . /usr/bin/gettext.sh
 
-/usr/bin/echo "--$(date) alsa_remove--" >> /var/log/jackman.log
+/usr/bin/echo "--$(date) jackman_udev_unplug--" >> /var/log/jackman.log
 
 
 jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
