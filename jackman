@@ -226,7 +226,7 @@ if [[ -z $FORCEREPLACE ]] && ( [[ ! -z $prio ]] && [[ $prio -gt $oldprio ]] ); t
 
         inout=$(grep -o -P '(?<=attach_others=).*' < ${jackhome}/.config/jackman.conf)
         
-        if [[ $inout = "false" ]] || [[ $inout -eq 0 ]]; then
+        if [[ $inout = "false" ]] || [[ $inout = "0" ]]; then
             [[ verbose -gt 0 ]] && echo "$(gettext "not attaching alsa_in and alsa_out as it's disabled in config file")"
         else
             [[ verbose -gt 0 ]] && echo "$(gettext "attaching alsa_in and alsa_out...")"

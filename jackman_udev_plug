@@ -35,9 +35,9 @@ if [[ ! -z $ID_MODEL ]]; then
     if ( [[ -z $thisuser ]] || [[ ! $thisuser == $jackuser ]] ); then
         /usr/bin/echo "running with su" >> /var/log/jackman.log
         if [[ $(grep audio <<< $(id $jackuser -Gn)) ]]; then
-            /usr/bin/su $jackuser - -g audio -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -n\"$DEVNAME\" -m\"$ID_MODEL\" -f -v " >> /var/log/jackman.log 2>&1
+            /usr/bin/su $jackuser - -g audio -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -n\"$DEVNAME\" -m\"$ID_MODEL\" -v " >> /var/log/jackman.log 2>&1
         else
-            /usr/bin/su $jackuser - -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -n\"$DEVNAME\" -m\"$ID_MODEL\" -f -v " >> /var/log/jackman.log 2>&1
+            /usr/bin/su $jackuser - -c "DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\" /usr/bin/jackman -n\"$DEVNAME\" -m\"$ID_MODEL\" -v " >> /var/log/jackman.log 2>&1
         fi
         if ! /usr/bin/su $jackuser - -c '/usr/bin/jack_control status'; then exit 1; fi
     else
