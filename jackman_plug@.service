@@ -1,6 +1,8 @@
 [Unit]
 Description=automatically switches jackdbus master device
 After=suspend.target
+After=default.target
+After=hibernate.target
 
 [Service]
 Type=forking
@@ -13,3 +15,4 @@ StartLimitBurst=3
 [Install]
 WantedBy=suspend.target
 WantedBy=default.target
+WantedBy=hibernate.target

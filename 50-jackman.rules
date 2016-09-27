@@ -5,7 +5,6 @@ KERNEL=="midiC[D0-9]*", DRIVERS=="usb", PROGRAM="/usr/bin/alsa_name.pl %k %b", N
 KERNEL=="pcmC[D0-9cp]*", DRIVERS=="usb" PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
 
 # add jack ports via alsa_in and alsa_out or switch jack master
-#"/usr/bin/alsa_add_udev"
 ACTION=="add", KERNEL=="controlC[0-9]*", TAG+="systemd", ENV{SYSTEMD_WANTS}="jackman_plug@%N.service"
 #ACTION=="add", KERNEL=="hwC[D0-9]*", TAG+="systemd", ENV{SYSTEMD_WANTS}="jackman_plug@%N.service"
 #ACTION=="add", KERNEL=="midiC[D0-9]*", TAG+="systemd", ENV{SYSTEMD_WANTS}="jackman_plug@%N.service"
