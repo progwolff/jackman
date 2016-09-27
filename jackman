@@ -199,7 +199,7 @@ while read -r line; do
     device=$(cut -d '=' -f 1 <<< ${line})
     shortname=$(cut -d ',' -f 1 <<< ${device})
     [[ verbose -gt 0 ]] && [[ ! -z ${device} ]] && echo $'\t'"${device}"
-    if [[ ! $BLACKLIST =~ (^|;)"$device"($|;) ]] && [[ $newprio -lt $prio ]]; then # && [[ $(grep "${shortname}" <<< $(aplay -l)) ]]; then
+    if [[ ! $BLACKLIST =~ (^|;)"$device"($|;) ]] && [[ $newprio -lt $prio ]] && [[ $(grep "${shortname}" <<< $(aplay -l)) ]]; then
         #echo "prio: $newprio"
         confline="$line"
         prio=$newprio
@@ -215,6 +215,7 @@ if [[ -z $CARD ]]; then
 fi
 device=$(cut -d ',' -f 2 <<< ${device})
 
+[[ -z $device ]] && exit 0 #exit 0 to prevent systemd daemon from restarting
 
 [[ verbose -gt 0 ]] && echo "`eval_gettext \"old card's priority was \\\${oldprio}. new card's best priority is \\\${prio}\"`"
 

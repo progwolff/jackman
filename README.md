@@ -14,7 +14,6 @@ manually.
 - alsa_in, alsa_out
  - For all other devices, alsa_in and alsa_out interfaces will be created  
 - Works great in combination with libflashsupport-jack and pulseaudio-jack.
- - Just press play, jackman will care for your device configuration
 
 # Dependencies
 - bash
@@ -51,7 +50,6 @@ Run
 # udevadm control -R
 # systemctl enable jackman_plug@" ".service
 ```
-or reboot your system.
 
 # Configuration
 Copy `jackman.conf` to `$HOME/.config/`.
