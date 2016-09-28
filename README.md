@@ -50,6 +50,7 @@ Run
 ```
 # udevadm control -R
 # systemctl enable jackman_plug@" ".service
+# systemctl start jackman_plug@" ".service
 ```
 
 # Configuration
