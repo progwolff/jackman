@@ -10,6 +10,7 @@ arch:
     - "alsa-utils" 
     - "systemd" 
     - "coreutils"
+    - "python2"
   script:
     - "makepkg -i"
 
