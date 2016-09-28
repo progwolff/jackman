@@ -18,7 +18,8 @@ manually.
 # Dependencies
 - bash
 - systemd
-- jack
+- jackdbus
+- python2
 - alsa-utils
 - kdialog [optional]
 - zenity [optional]
