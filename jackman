@@ -109,8 +109,9 @@ function force_sm {
 }
 
 function jack_config {
-    keys=$(grep "option name" $jackhome/.config/jack/conf.xml | grep "\"$1\"" | grep -o -P '(?<=name=")[^"]*')
-    values=$(grep "option name" $jackhome/.config/jack/conf.xml | grep "\"$1\"" | grep -o -P '(?<=>)[^<]*')
+    line=$(grep -n "name=\"alsa\"" < $jackhome/.config/jack/conf.xml | grep -o -P '[0-9]+')
+    keys=$(tail -n +$line $jackhome/.config/jack/conf.xml | grep "option name" | grep "\"$1\"" | grep -o -P '(?<=name=")[^"]*')
+    values=$(tail -n +$line $jackhome/.config/jack/conf.xml | grep "option name" | grep "\"$1\"" | grep -o -P '(?<=>)[^<]*')
     echo "$values"
 }
 
