@@ -116,12 +116,16 @@ This enables users in the audio group to assign real time priorities in a `su` s
 
 Configure Jack to use real time priorities, ALSA and asynchronous mode
 ```
-jack_control eps driver alsa
-jack_control eps realtime True
-jack_control eps realtime-priority 79
-jack_control eps sync False
-jack_control eps clock-source 2
+$ jack_control eps driver alsa
+$ jack_control eps realtime True
+$ jack_control eps realtime-priority 79
+$ jack_control eps sync False
+$ jack_control eps clock-source 2
 ```
+
+Run `$ alsamixer`. For all your cards set all outputs to 0dB (or to the maximum volume you want for this card). Note that volumes above 0dB will lead to distortions.
+
+Run `# alsactl store` to make the changes persistent.
 
 for details on setting up a low latency audio environment see:
 * [LinuxMusicians Audio Configuration Checklist](https://linuxmusicians.com/viewtopic.php?f=27&t=15378)
