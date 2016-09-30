@@ -54,6 +54,81 @@ Run
 ```
 
 # Configuration
+
+## Initial Jack configuration
+
+If you already have Jack working, skip this section.
+
+The following steps will get you a sound system with the following structure:
+
+Pulseaudio -> Jack -> ALSA 
+
+Flash -> Jack -> ALSA
+
+System sounds, media players and generic applications will send audio to pulseaudio, the default sound server in KDE and in many linux distributions.
+
+Pulseaudio will then process this audio data through its engine, apply some mixing (this is the mixer you will likely see in your task panel) and send the final sum to Jack.
+
+Applications that use Jack directly, like DAWs or plugin hosts, will connect to Jack directly, omitting pulseaudio. Note that these applications are not using the mixer in your task panel, they are always at full volume.
+
+Jack finally uses the ALSA driver of your audio interface to send audio data to the audio interfaces' output.
+
+If this setup is for you, continue with the following steps.
+
+Install pulseaudio-jack and libflashsupport-jack
+
+e.g. on Arch Linux:
+```
+$ packer -S pulseaudio-jack libflashsupport-jack
+```
+
+Edit `/etc/pulse/default.pa`. 
+
+Comment out everything under the sections `### Load audio drivers statically` and `### Automatically load driver modules depending on the hardware available` to make sure pulseaudio does not grab any device directly.
+
+Uncomment everything under the section `### Automatically connect sink and source if JACK server is present` to let pulseaudio connect to the Jack server automatically.
+
+In `/etc/pulse/client.conf` set  `autospawn = yes`.
+
+In `/etc/pulse/daemon.conf` set `daemonize = yes`, `realtime-scheduling = yes`, `realtime-priority = 5` and `flat-volumes = no`
+
+Make sure there are no config files in `~/.config/pulse/`.
+
+Assign yourself to the audio group
+```
+# usermod -a -G audio wolff
+```
+
+Install `pam` if you do not have it yet.
+
+Add a file `/etc/security/limits.d/99-audio.conf` with content:
+```
+@audio  - rtprio        99
+@audio  - memlock       unlimited
+```
+This enables users in the audio group to assign real time priorities to processes
+
+Add the following line to `/etc/pam.d/su`
+```
+session         required        pam_limits.so
+```
+This enables users in the audio group to assign real time priorities in a `su` session (needed for hotplugging devices)
+
+Configure Jack to use real time priorities, ALSA and asynchronous mode
+```
+jack_control eps driver alsa
+jack_control eps realtime True
+jack_control eps realtime-priority 79
+jack_control eps sync False
+jack_control eps clock-source 2
+```
+
+for details on setting up a low latency audio environment see:
+* [LinuxMusicians Audio Configuration Checklist](https://linuxmusicians.com/viewtopic.php?f=27&t=15378)
+* [LinuxAudio System Configuration](http://wiki.linuxaudio.org/wiki/system_configuration)
+
+## Configuration of jackman
+
 Copy `jackman.conf` to `$HOME/.config/`.
 
 Add devices to this config file and edit the parameters to your needs.
@@ -68,68 +143,3 @@ On KDE you might want to use the systemsettings module [jackman_kcm](https://git
 
 Run `jackman -h` for help or just plug in a USB audio interface.
 
-## Notes on pulseaudio
-
-Install pulseaudio-jack.
-
-This config is recommended (put it to /etc/pulse/daemon.conf):
-
-```
-daemonize = yes
-fail = yes
-high-priority = yes
-nice-level = -11
-realtime-scheduling = yes
-realtime-priority = 5
-allow-module-loading = yes
-allow-exit = yes
-use-pid-file = yes
-system-instance = no
-local-server-type = user
-cpu-limit = no
-enable-shm = yes
-flat-volumes = no
-lock-memory = no
-exit-idle-time = 20
-scache-idle-time = 20
-dl-search-path = /usr/lib/pulse-9.0/modules
-default-script-file = /etc/pulse/default.pa
-load-default-script-file = yes
-log-target = 
-log-level = notice
-resample-method = speex-float-1
-enable-remixing = yes
-enable-lfe-remixing = yes
-lfe-crossover-freq = 120
-default-sample-format = s16le
-default-sample-rate = 48000
-alternate-sample-rate = 48000
-default-sample-channels = 2
-default-channel-map = front-left,front-right
-default-fragments = 4
-default-fragment-size-msec = 25
-enable-deferred-volume = yes
-deferred-volume-safety-margin-usec = 8000
-deferred-volume-extra-delay-usec = 0
-shm-size-bytes = 0
-log-meta = no
-log-time = no
-log-backtrace = 0
-rlimit-fsize = -1
-rlimit-data = -1
-rlimit-stack = -1
-rlimit-core = -1
-rlimit-rss = -1
-rlimit-as = -1
-rlimit-nproc = -1
-rlimit-nofile = 256
-rlimit-memlock = -1
-rlimit-locks = -1
-rlimit-sigpending = -1
-rlimit-msgqueue = -1
-rlimit-nice = 31
-rlimit-rtprio = 9
-rlimit-rttime = 200000
-```
-
-You may also want to comment out lines 38-58 in /etc/pulse/default.pa to make sure pulse does not grab devices by itself.
