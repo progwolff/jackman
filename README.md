@@ -19,7 +19,7 @@ manually.
 - bash
 - systemd
 - jackdbus
-- python2
+- python2-dbus
 - alsa-utils
 - kdialog [optional]
 - zenity [optional]
