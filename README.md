@@ -114,6 +114,8 @@ session         required        pam_limits.so
 ```
 This enables users in the audio group to assign real time priorities in a `su` session (needed for hotplugging devices).
 
+Note that real time priorities will only have effect on a preemtive kernel (look for the word PREEMT in `$ uname -a`. I recommend installing `linux-ck` or `linux-rt`.
+
 Configure Jack to use real time priorities, ALSA and asynchronous mode.
 ```
 $ jack_control eps driver alsa
