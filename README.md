@@ -57,7 +57,7 @@ Run
 
 ## Initial Jack configuration
 
-If you already have Jack working, skip this section.
+If you already have Jack working with pulseaudio, flash and real time priorities, skip this section.
 
 The following steps will get you a sound system with the following structure:
 
