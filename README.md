@@ -94,6 +94,8 @@ In `/etc/pulse/daemon.conf` set `daemonize = yes`, `realtime-scheduling = yes`, 
 
 Make sure there are no config files in `~/.config/pulse/`.
 
+If you are using KDE install `phonon-qt5-vlc`, uninstall `phonon-qt5-gstreamer`.
+
 Assign yourself to the audio group.
 ```
 # usermod -a -G audio <username>
