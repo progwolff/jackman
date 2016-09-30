@@ -96,7 +96,7 @@ Make sure there are no config files in `~/.config/pulse/`.
 
 Assign yourself to the audio group.
 ```
-# usermod -a -G audio wolff
+# usermod -a -G audio <username>
 ```
 
 Install `pam` if you do not have it yet.
