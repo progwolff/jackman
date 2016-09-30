@@ -75,12 +75,16 @@ Jack finally uses the ALSA driver of your audio interface to send audio data to 
 
 If this setup is for you, continue with the following steps.
 
+---
+
 Install pulseaudio-jack and libflashsupport-jack.
 
 e.g. on Arch Linux:
 ```
 $ packer -S pulseaudio-jack libflashsupport-jack
 ```
+
+---
 
 Edit `/etc/pulse/default.pa`. 
 
@@ -94,7 +98,11 @@ In `/etc/pulse/daemon.conf` set `daemonize = yes`, `realtime-scheduling = yes`, 
 
 Make sure there are no config files in `~/.config/pulse/`.
 
+---
+
 If you are using KDE, install `phonon-qt5-vlc` and uninstall `phonon-qt5-gstreamer`.
+
+---
 
 Assign yourself to the audio group.
 ```
@@ -116,7 +124,9 @@ session         required        pam_limits.so
 ```
 This enables users in the audio group to assign real time priorities in a `su` session (needed for hotplugging devices).
 
-Note that real time priorities will only have effect on a preemtive kernel (look for the word PREEMT in `$ uname -a`. I recommend installing `linux-ck` or `linux-rt`.
+Note that real time priorities will only have effect on a preemtive kernel (look for the word `PREEMPT` in `$ uname -a` ). I recommend installing `linux-ck` or `linux-rt`.
+
+---
 
 Configure Jack to use real time priorities, ALSA and asynchronous mode.
 ```
@@ -127,9 +137,13 @@ $ jack_control eps sync False
 $ jack_control eps clock-source 2
 ```
 
+---
+
 Run `$ alsamixer`. For all your cards set all outputs to 0dB (or to the maximum volume you want for this card). Note that volumes above 0dB will lead to distortions.
 
 Run `# alsactl store` to make the changes persistent.
+
+---
 
 for details on setting up a low latency audio environment see:
 * [LinuxMusicians Audio Configuration Checklist](https://linuxmusicians.com/viewtopic.php?f=27&t=15378)
