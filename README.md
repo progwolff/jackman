@@ -75,7 +75,7 @@ Jack finally uses the ALSA driver of your audio interface to send audio data to 
 
 If this setup is for you, continue with the following steps.
 
-Install pulseaudio-jack and libflashsupport-jack
+Install pulseaudio-jack and libflashsupport-jack.
 
 e.g. on Arch Linux:
 ```
@@ -90,11 +90,11 @@ Uncomment everything under the section `### Automatically connect sink and sourc
 
 In `/etc/pulse/client.conf` set  `autospawn = yes`.
 
-In `/etc/pulse/daemon.conf` set `daemonize = yes`, `realtime-scheduling = yes`, `realtime-priority = 5` and `flat-volumes = no`
+In `/etc/pulse/daemon.conf` set `daemonize = yes`, `realtime-scheduling = yes`, `realtime-priority = 5` and `flat-volumes = no`.
 
 Make sure there are no config files in `~/.config/pulse/`.
 
-Assign yourself to the audio group
+Assign yourself to the audio group.
 ```
 # usermod -a -G audio wolff
 ```
@@ -106,15 +106,15 @@ Add a file `/etc/security/limits.d/99-audio.conf` with content:
 @audio  - rtprio        99
 @audio  - memlock       unlimited
 ```
-This enables users in the audio group to assign real time priorities to processes
+This enables users in the audio group to assign real time priorities to processes.
 
-Add the following line to `/etc/pam.d/su`
+Add the following line to `/etc/pam.d/su`.
 ```
 session         required        pam_limits.so
 ```
-This enables users in the audio group to assign real time priorities in a `su` session (needed for hotplugging devices)
+This enables users in the audio group to assign real time priorities in a `su` session (needed for hotplugging devices).
 
-Configure Jack to use real time priorities, ALSA and asynchronous mode
+Configure Jack to use real time priorities, ALSA and asynchronous mode.
 ```
 $ jack_control eps driver alsa
 $ jack_control eps realtime True
@@ -147,3 +147,4 @@ On KDE you might want to use the systemsettings module [jackman_kcm](https://git
 
 Run `jackman -h` for help or just plug in a USB audio interface.
 
+Use a Jack patchbay like [Catia](http://kxstudio.linuxaudio.org/Applications:Catia) to connect your applications to the right cards.
