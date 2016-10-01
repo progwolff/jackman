@@ -1,8 +1,8 @@
 # give cards unique names
-KERNEL=="controlC[0-9]*", DRIVERS=="usb", PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
-KERNEL=="hwC[D0-9]*", DRIVERS=="usb", PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
-KERNEL=="midiC[D0-9]*", DRIVERS=="usb", PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
-KERNEL=="pcmC[D0-9cp]*", DRIVERS=="usb" PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
+#KERNEL=="controlC[0-9]*", DRIVERS=="usb", PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
+#KERNEL=="hwC[D0-9]*", DRIVERS=="usb", PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
+#KERNEL=="midiC[D0-9]*", DRIVERS=="usb", PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
+#KERNEL=="pcmC[D0-9cp]*", DRIVERS=="usb" PROGRAM="/usr/bin/alsa_name.pl %k %b", NAME="snd/%c{1}"
 
 # add jack ports via alsa_in and alsa_out or switch jack master
 ACTION=="add", KERNEL=="controlC[0-9]*", TAG+="systemd", ENV{SYSTEMD_WANTS}="jackman_plug@%N.service"
