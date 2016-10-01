@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-17 15:27+0200\n"
+"POT-Creation-Date: 2016-10-01 19:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,135 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /usr/bin/alsa_add:24
+
+#: /usr/bin/alsa_add:63 jackman:65
+#, sh-format
+msgid "Attaching hw:${card},${device}."
+msgstr "Binde hw:${card},${device} ein."
+
+#: /usr/bin/alsa_add:101 /usr/bin/alsa_add:102 /usr/bin/alsa_add:247
+#: /usr/bin/alsa_add:248 jackman:110 jackman:111 jackman:270 jackman:271
+#: jackman:119 jackman:120 jackman:301 jackman:302
+msgid "Audio Interface"
+msgstr "Audiointerface"
+
+#: /usr/bin/alsa_add:140 jackman:151 jackman:166
+msgid "no card given, using card with highest priority"
+msgstr ""
+"Kein Audiointerface wurde angegeben. Verwende Interface mit höchster "
+"Priorität."
+
+#: /usr/bin/alsa_add:142 jackman:153 jackman:168
+#, sh-format
+msgid "jack user is ${jackuser}"
+msgstr "JACK Benutzer ist ${jackuser}"
+
+#: /usr/bin/alsa_add:154 jackman:171 jackman:188
+#, sh-format
+msgid "reading config from $jackhome/${configfile}"
+msgstr "Lese Konfiguration aus $jackhome/${configfile}"
+
+#: /usr/bin/alsa_add:156 jackman:173 jackman:190
+msgid "blacklisted devices:"
+msgstr "Ignoriere Geräte:"
+
+#: /usr/bin/alsa_add:163 jackman:180 jackman:199
+msgid "have config for: "
+msgstr "Konfiguration vorhanden für:"
+
+#: /usr/bin/alsa_add:177 jackman:194 jackman:213
+#, sh-format
+msgid "using $device"
+msgstr "Verwende Gerät $device"
+
+#: /usr/bin/alsa_add:186 jackman:203 jackman:223
+#, sh-format
+msgid "old card's priority was ${oldprio}. new card's best priority is ${prio}"
+msgstr ""
+"Die Priorität des vorherigen Geräts war ${oldprio}. Das neue Gerät hat "
+"Priorität ${prio}."
+
+#: /usr/bin/alsa_add:187 jackman:204 jackman:225
+msgid "replacing forced."
+msgstr "Erzwinge Masterwechsel."
+
+#: /usr/bin/alsa_add:192 jackman:209 jackman:236 jackman:324
+msgid "attaching alsa_in and alsa_out..."
+msgstr "Binde alsa_in und alsa_out ein..."
+
+#: /usr/bin/alsa_add:196 jackman:213 jackman:238
+#, sh-format
+msgid "Attached ${SHORTNAME}."
+msgstr "${SHORTNAME} wurde eingebunden."
+
+#: /usr/bin/alsa_add:199 jackman:216 jackman:242
+msgid "replacing..."
+msgstr "Ersetze Master..."
+
+#: /usr/bin/alsa_add:203 jackman:220 jackman:246
+msgid "no device set. trying device 0."
+msgstr "Kein Gerät angegeben. Versuche Gerät 0."
+
+#: /usr/bin/alsa_add:208 jackman:225 jackman:251
+msgid "using config:"
+msgstr "Verwende Konfiguration:"
+
+#: /usr/bin/alsa_add:222 jackman:242 jackman:268
+#, sh-format
+msgid "Buffer size changed from ${oldval} to ${newval}."
+msgstr "Die Puffergröße wurde von ${oldval} auf ${newval} geändert."
+
+#: /usr/bin/alsa_add:247 /usr/bin/alsa_add:248 /usr/bin/alsa_add:249
+#: jackman:270 jackman:271 jackman:272 jackman:301 jackman:302 jackman:303
+msgid "Could not start jack."
+msgstr "Konnte JACK nicht starten."
+
+#: /usr/bin/alsa_add:247 /usr/bin/alsa_add:248 /usr/bin/alsa_add:249
+msgid "Try again with other device parameters."
+msgstr "Versuchen Sie es noch einmal mit anderen Einstellungen."
+
+#: /usr/bin/alsa_add:255 jackman:279 jackman:312
+#, sh-format
+msgid "Switched master to ${SHORTNAME},${device}."
+msgstr "${SHORTNAME},${device} wird als neuer Master verwendet."
+
+#: /usr/bin/alsa_add:257 jackman:281 jackman:314
+#, sh-format
+msgid ""
+"Switched master from ${currentname},${currentdevice} to ${SHORTNAME},"
+"${device}."
+msgstr ""
+"Statt ${currentname},${currentdevice} wird ${SHORTNAME},${device} als neuer "
+"Master verwendet."
+
+#: /usr/bin/alsa_remove:30
+#, sh-format
+msgid "Removed card ${currentcard}. Trying to switch master..."
+msgstr ""
+"Audiointerface ${currentcard} wurde entfernt. Versuche, auf einen neuen "
+"Master zu wechseln..."
+
+#: jackman:70 jackman:71
+msgid "restarting pulseaudio"
+msgstr "Starte pulseaudio neu."
+
+#: jackman:270 jackman:271 jackman:272 jackman:301 jackman:302 jackman:303
+msgid "Trying next device..."
+msgstr "Versuche nächstes Gerät..."
+
+#: jackman:198
+msgid "looking for: "
+msgstr ""
+
+#: jackman:234 jackman:322
+msgid "not attaching alsa_in and alsa_out as it's disabled in config file"
+msgstr ""
+
+#: jackman:25
 #, sh-format
 msgid ""
 "this script configures the audio device given by environment variables "
-"$DEVNAME and $ID_MODEL (see udev parameter description) or the device with "
+"$DEVNAME and $SHORTNAME (see udev parameter description) or the device with "
 "highest priority as jackdbus master if it has a higher priority than the "
 "current master (as specified in $HOME/${configfile}), starts jackdbus and "
 "adds alsa_in and alsa_out devices for all other audio devices.\n"
@@ -28,14 +152,15 @@ msgid ""
 "parameters:\n"
 "    -h show this\n"
 "    -v verbose output\n"
-"    -m set value for ID_MODEL\n"
+"    -m set value for SHORTNAME\n"
 "    -n set value for DEVNAME\n"
 "    -f force replace (see FORCEREPLACE in next section)\n"
 "    -d set value for DEVICE\n"
-"    -b set value for BLACKLIST, e.g. \"HDA Intel MID,3\"\n"
+"    -b set value for BLACKLIST, e.g\n"
+"    -k use previously used card and refresh jackbus, alsa_in, alsa_out\n"
 "    \n"
 "environment variables used by this script:\n"
-"    ID_MODEL: model id of the device as given by udev\n"
+"    SHORTNAME: short name of the device as given by `aplay -l`\n"
 "    DEVNAME: device name as given by udev\n"
 "    FORCEREPLACE: if not empty the current master will always be replaced, "
 "regardless of its priority\n"
@@ -50,9 +175,8 @@ msgid ""
 "    if ulimit is too low (errors like \"cannot lock down memory\" appear) "
 "place the following line in /etc/pam.d/su:\n"
 "        session         required        pam_limits.so\n"
-msgstr ""
-"Dieses Skript konfiguriert für das Audiointerface, welches durch die "
-"Umgebungsvariablen$DEVNAME und $ID_MODEL (siehe Beschreibung der "
+msgstr "Dieses Skript konfiguriert für das Audiointerface, welches durch die "
+"Umgebungsvariablen$DEVNAME und $SHORTNAME (siehe Beschreibung der "
 "entsprechenden udev-Parameter) angegeben wurde, das Gerät mit der höchsten "
 "Priorität als Master für jackdbus, sofern es eine höhere Priorität als das "
 "aktuelle Gerät besitzt (wie in $HOME/${configfile} spezifiziert), startet "
@@ -62,14 +186,14 @@ msgstr ""
 "Parameter:\n"
 "    -h Zeige diese Hilfe\n"
 "    -v ausführliche Ausgaben\n"
-"    -m setze Umgebungsvariable ID_MODEL\n"
+"    -m setze Umgebungsvariable SHORTNAME\n"
 "    -n setze Umgebungsvariable DEVNAME\n"
 "    -f erzwinge Ersetzung (siehe FORCEREPLACE im nächsten Abschnitt)\n"
 "    -d setze Umgebungsvariable DEVICE\n"
 "    -b setze Umgebungsvariable BLACKLIST, z.B.:. \"HDA Intel MID,3\"\n"
 "    \n"
 "Von diesem Skript verwendete Umgebungsvariablen:\n"
-"    ID_MODEL: Modellname des Audiointerfaces, wie in udev angegeben.\n"
+"    SHORTNAME: Modellname des Audiointerfaces, wie in `aplay -l` angegeben.\n"
 "    DEVNAME: Name des Audiointerfaces, wie in udev angegeben.\n"
 "    FORCEREPLACE: Falls nicht leer, wird der aktuelle Master stets ersetzt, "
 "unabhängig von seiner Priorität.\n"
@@ -86,154 +210,3 @@ msgstr ""
 "down memory\" treten auf), ergänzen Sie die folgende Zeile in /etc/pam.d/"
 "su:\n"
 "        session         required        pam_limits.so\n"
-
-#: /usr/bin/alsa_add:63 jackman:65
-#, sh-format
-msgid "Attaching hw:${card},${device}."
-msgstr "Binde hw:${card},${device} ein."
-
-#: /usr/bin/alsa_add:101 /usr/bin/alsa_add:102 /usr/bin/alsa_add:247
-#: /usr/bin/alsa_add:248 jackman:110 jackman:111 jackman:270 jackman:271
-msgid "Audio Interface"
-msgstr "Audiointerface"
-
-#: /usr/bin/alsa_add:140 jackman:151
-msgid "no card given, using card with highest priority"
-msgstr ""
-"Kein Audiointerface wurde angegeben. Verwende Interface mit höchster "
-"Priorität."
-
-#: /usr/bin/alsa_add:142 jackman:153
-#, sh-format
-msgid "jack user is ${jackuser}"
-msgstr "JACK Benutzer ist ${jackuser}"
-
-#: /usr/bin/alsa_add:154 jackman:171
-#, sh-format
-msgid "reading config from $jackhome/${configfile}"
-msgstr "Lese Konfiguration aus $jackhome/${configfile}"
-
-#: /usr/bin/alsa_add:156 jackman:173
-msgid "blacklisted devices:"
-msgstr "Ignoriere Geräte:"
-
-#: /usr/bin/alsa_add:163 jackman:180
-msgid "have config for: "
-msgstr "Konfiguration vorhanden für:"
-
-#: /usr/bin/alsa_add:177 jackman:194
-#, sh-format
-msgid "using $device"
-msgstr "Verwende Gerät $device"
-
-#: /usr/bin/alsa_add:186 jackman:203
-#, sh-format
-msgid "old card's priority was ${oldprio}. new card's best priority is ${prio}"
-msgstr ""
-"Die Priorität des vorherigen Geräts war ${oldprio}. Das neue Gerät hat "
-"Priorität ${prio}."
-
-#: /usr/bin/alsa_add:187 jackman:204
-msgid "replacing forced."
-msgstr "Erzwinge Masterwechsel."
-
-#: /usr/bin/alsa_add:192 jackman:209
-msgid "attaching alsa_in and alsa_out..."
-msgstr "Binde alsa_in und alsa_out ein..."
-
-#: /usr/bin/alsa_add:196 jackman:213
-#, sh-format
-msgid "Attached ${SHORTNAME}."
-msgstr "${SHORTNAME} wurde eingebunden."
-
-#: /usr/bin/alsa_add:199 jackman:216
-msgid "replacing..."
-msgstr "Ersetze Master..."
-
-#: /usr/bin/alsa_add:203 jackman:220
-msgid "no device set. trying device 0."
-msgstr "Kein Gerät angegeben. Versuche Gerät 0."
-
-#: /usr/bin/alsa_add:208 jackman:225
-msgid "using config:"
-msgstr "Verwende Konfiguration:"
-
-#: /usr/bin/alsa_add:222 jackman:242
-#, sh-format
-msgid "Buffer size changed from ${oldval} to ${newval}."
-msgstr "Die Puffergröße wurde von ${oldval} auf ${newval} geändert."
-
-#: /usr/bin/alsa_add:247 /usr/bin/alsa_add:248 /usr/bin/alsa_add:249
-#: jackman:270 jackman:271 jackman:272
-msgid "Could not start jack."
-msgstr "Konnte JACK nicht starten."
-
-#: /usr/bin/alsa_add:247 /usr/bin/alsa_add:248 /usr/bin/alsa_add:249
-msgid "Try again with other device parameters."
-msgstr "Versuchen Sie es noch einmal mit anderen Einstellungen."
-
-#: /usr/bin/alsa_add:255 jackman:279
-#, sh-format
-msgid "Switched master to ${SHORTNAME},${device}."
-msgstr "${SHORTNAME},${device} wird als neuer Master verwendet."
-
-#: /usr/bin/alsa_add:257 jackman:281
-#, sh-format
-msgid ""
-"Switched master from ${currentname},${currentdevice} to ${SHORTNAME},"
-"${device}."
-msgstr ""
-"Statt ${currentname},${currentdevice} wird ${SHORTNAME},${device} als neuer "
-"Master verwendet."
-
-#: /usr/bin/alsa_remove:30
-#, sh-format
-msgid "Removed card ${currentcard}. Trying to switch master..."
-msgstr ""
-"Audiointerface ${currentcard} wurde entfernt. Versuche, auf einen neuen "
-"Master zu wechseln..."
-
-#: jackman:25
-#, sh-format
-msgid ""
-"this script configures the audio device given by environment variables "
-"$DEVNAME and $ID_MODEL (see udev parameter description) or the device with "
-"highest priority as jackdbus master if it has a higher priority than the "
-"current master (as specified in $HOME/${configfile}), starts jackdbus and "
-"adds alsa_in and alsa_out devices for all other audio devices.\n"
-"\n"
-"parameters:\n"
-"    -h show this\n"
-"    -v verbose output\n"
-"    -m set value for ID_MODEL\n"
-"    -n set value for DEVNAME\n"
-"    -f force replace (see FORCEREPLACE in next section)\n"
-"    -d set value for DEVICE\n"
-"    -b set value for BLACKLIST, e.g. \"HDA Intel MID,3\"\n"
-"    -k use previously used card and refresh jackbus, alsa_in, alsa_out\n"
-"    \n"
-"environment variables used by this script:\n"
-"    ID_MODEL: model id of the device as given by udev\n"
-"    DEVNAME: device name as given by udev\n"
-"    FORCEREPLACE: if not empty the current master will always be replaced, "
-"regardless of its priority\n"
-"    DEVICE: if set to an integer number, the device of the given card with "
-"id $DEVICE will be used, regardless of its priority\n"
-"    BLACKLIST: dont use devices with name in semicolon separated list "
-"$BLACKLIST\n"
-"    \n"
-"parameters used for jack_control can be specified in $HOME/${configfile}\n"
-"\n"
-"common issues:\n"
-"    if ulimit is too low (errors like \"cannot lock down memory\" appear) "
-"place the following line in /etc/pam.d/su:\n"
-"        session         required        pam_limits.so\n"
-msgstr ""
-
-#: jackman:70
-msgid "restarting pulseaudio"
-msgstr "Starte pulseaudio neu."
-
-#: jackman:270 jackman:271 jackman:272
-msgid "Trying next device..."
-msgstr "Versuche nächstes Gerät..."

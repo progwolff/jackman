@@ -31,11 +31,11 @@ parameters:
     -n set value for DEVNAME
     -f force replace (see FORCEREPLACE in next section)
     -d set value for DEVICE
-    -b set value for BLACKLIST, e.g. \\\"HDA Intel MID,3\\\"
+    -b set value for BLACKLIST, e.g
     -k use previously used card and refresh jackbus, alsa_in, alsa_out
     
 environment variables used by this script:
-    SHORTNAME: short name of the device as given by \`aplay -l\`
+    SHORTNAME: short name of the device as given by \\\`aplay -l\\\`
     DEVNAME: device name as given by udev
     FORCEREPLACE: if not empty the current master will always be replaced, regardless of its priority
     DEVICE: if set to an integer number, the device of the given card with id \\$DEVICE will be used, regardless of its priority
@@ -44,7 +44,7 @@ environment variables used by this script:
 parameters used for jack_control can be specified in \\$HOME/\\\${configfile}
 
 common issues:
-    if ulimit is too low (errors like \\"cannot lock down memory\\" appear) place the following line in /etc/pam.d/su:
+    if ulimit is too low (errors like \\\"cannot lock down memory\\\" appear) place the following line in /etc/pam.d/su:
         session         required        pam_limits.so
 \"`"
 }
