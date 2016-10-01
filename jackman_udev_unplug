@@ -42,7 +42,7 @@ if [ ! -z $CARD ]; then
             /usr/bin/echo \"$msg\"" 
 
             cns="$(su $jackuser - -c '/usr/bin/jack_lsp -c')"
-            IFS=',' read -r -a cons <<< "${cns//$'\n'/,}"
+            IFS=';' read -r -a cons <<< "${cns//$'\n'/;}"
             
             /usr/bin/su $jackuser - -c "/usr/bin/jack_control stop" &
 
