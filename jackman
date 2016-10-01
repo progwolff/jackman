@@ -216,7 +216,7 @@ if [[ -z $CARD ]]; then
 fi
 device=$(cut -d ',' -f 2 <<< ${device})
 
-[[ -z $device ]] && exit 0 #exit 0 to prevent systemd daemon from restarting
+[[ -z $device ]] && [[ ! -z $BLACKLIST ]] && exit 0 #exit 0 to prevent systemd daemon from restarting
 
 [[ verbose -gt 0 ]] && echo "`eval_gettext \"old card's priority was \\\${oldprio}. new card's best priority is \\\${prio}\"`"
 
