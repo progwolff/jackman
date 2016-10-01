@@ -22,12 +22,12 @@ DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
 function die { echo "$@" 1>&2 ; exit 1; }
 
 function show_help {
-    echo "`eval_gettext \"this script configures the audio device given by environment variables \\$DEVNAME and \\$ID_MODEL (see udev parameter description) or the device with highest priority as jackdbus master if it has a higher priority than the current master (as specified in \\$HOME/\\\${configfile}), starts jackdbus and adds alsa_in and alsa_out devices for all other audio devices.
+    echo "`eval_gettext \"this script configures the audio device given by environment variables \\$DEVNAME and \\$SHORTNAME (see udev parameter description) or the device with highest priority as jackdbus master if it has a higher priority than the current master (as specified in \\$HOME/\\\${configfile}), starts jackdbus and adds alsa_in and alsa_out devices for all other audio devices.
 
 parameters:
     -h show this
     -v verbose output
-    -m set value for ID_MODEL
+    -m set value for SHORTNAME
     -n set value for DEVNAME
     -f force replace (see FORCEREPLACE in next section)
     -d set value for DEVICE
@@ -35,7 +35,7 @@ parameters:
     -k use previously used card and refresh jackbus, alsa_in, alsa_out
     
 environment variables used by this script:
-    ID_MODEL: model id of the device as given by udev
+    SHORTNAME: short name of the device as given by \`aplay -l\`
     DEVNAME: device name as given by udev
     FORCEREPLACE: if not empty the current master will always be replaced, regardless of its priority
     DEVICE: if set to an integer number, the device of the given card with id \\$DEVICE will be used, regardless of its priority
@@ -131,7 +131,7 @@ while getopts "h?vfm:n:d:b:k" opt; do
         ;;
     f)  FORCEREPLACE=1
         ;;
-    m)  ID_MODEL="$OPTARG"
+    m)  SHORTNAME="$OPTARG"
         ;;
     n)  DEVNAME="$OPTARG"
         ;;
@@ -155,13 +155,15 @@ CARD=${DEVNAME//[!0-9]/ }
 CARD=$(tr -s [:space:] <<< ${CARD})
 CARD=${CARD// /,}
 
-#if card was not set try to get card from ID_MODEL
-[[ -z $CARD ]] && [[ ! -z $ID_MODEL ]] && CARD=$(aplay -l | grep "$ID_MODEL" | grep -o -P '[0-9]*' | head -1)
+[[ -z $SHORTNAME ]] && SHORTNAME="$(grep -P "^[^:]*${CARD}:" <<< "$(aplay -l)" | grep -o -P '(?<=\[)[^\[\]]*(?=\])' | head -1)"
 
-SHORTNAME="${ID_MODEL//_/ }"
+#if card was not set try to get card from SHORTNAME
+[[ -z $CARD ]] && [[ ! -z $SHORTNAME ]] && CARD=$(aplay -l | grep "$SHORTNAME" | grep -o -P '[0-9]*' | head -1)
+
+SHORTNAME="${SHORTNAME//_/ }"
 NAME="$SHORTNAME ($CARD)"
 
-[[ verbose -gt 0 ]] && ( [[ -z $ID_MODEL ]] && echo "$(gettext "no card given, using card with highest priority")" || echo "$(gettext "using card $NAME")" )
+[[ verbose -gt 0 ]] && ( [[ -z $SHORTNAME ]] && echo "$(gettext "no card given, using card with highest priority")" || echo "$(gettext "using card $NAME")" )
 
 [[ verbose -gt 0 ]] && echo "`eval_gettext \"jack user is \\\${jackuser}\"`"
 
