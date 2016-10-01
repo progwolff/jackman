@@ -24,7 +24,6 @@ package() {
   cp ../50-jackman.rules "$pkgdir/etc/udev/rules.d/"
   cp ../jackman "$pkgdir/usr/bin/"
   cp ../jackman_udev* "$pkgdir/usr/bin/"
-  cp ../alsa* "$pkgdir/usr/bin/"
   cp ../*.service "$pkgdir/usr/lib/systemd/system/"
   for d in `cd ../po; ls -1 *.po 2>/dev/null`; do
   	mkdir -p "$pkgdir/usr/share/locale/${d%.po}/LC_MESSAGES"
