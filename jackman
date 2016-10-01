@@ -155,7 +155,7 @@ CARD=${DEVNAME//[!0-9]/ }
 CARD=$(tr -s [:space:] <<< ${CARD})
 CARD=${CARD// /,}
 
-[[ -z $SHORTNAME ]] && SHORTNAME="$(grep -P "^[^:]*${CARD}:" <<< "$(aplay -l)" | grep -o -P '(?<=\[)[^\[\]]*(?=\])' | head -1)"
+[[ ! -z $CARD ]] && [[ -z $SHORTNAME ]] && SHORTNAME="$(grep -P "^[^:]*${CARD}:" <<< "$(aplay -l)" | grep -o -P '(?<=\[)[^\[\]]*(?=\])' | head -1)"
 
 #if card was not set try to get card from SHORTNAME
 [[ -z $CARD ]] && [[ ! -z $SHORTNAME ]] && CARD=$(aplay -l | grep "$SHORTNAME" | grep -o -P '[0-9]*' | head -1)
