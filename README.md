@@ -7,11 +7,11 @@ Collection of scripts that help managing multiple audio interfaces with [Jack](h
  
 - Persistent configurations per device
  - jackman keeps your jack configurations for each audio device and configures jack for you.
-- Hotplugging
+- Hotplugging (optional)
  - Based on priorities jackman will change your jack master device when you plug in a USB audio interface with higher priority than the current master.
  - If you remove a USB device that is the current master, jackman will configure the remaining card with highest priority as new master. No need to restart jack 
 manually.
-- alsa_in, alsa_out
+- alsa_in, alsa_out (optional)
  - For all other devices, alsa_in and alsa_out interfaces will be created  
 - Works great in combination with libflashsupport-jack and pulseaudio-jack.
 
@@ -142,6 +142,8 @@ $ jack_control eps clock-source 2
 Run `$ alsamixer`. For all your cards set all outputs to 0dB (or to the maximum volume you want for this card). Note that volumes above 0dB will lead to distortions.
 
 Run `# alsactl store` to make the changes persistent.
+
+If your card is not listed in alsamixer, try to install `alsa-firmware` and have a look at the [ALSA SoundCard Matrix](http://www.alsa-project.org/main/index.php/Matrix:Main) for specific instructions to your audio interface.
 
 ---
 
