@@ -1,7 +1,6 @@
 [Unit]
 Description=automatically switches jackdbus master device
 After=suspend.target
-After=default.target
 After=hibernate.target
 
 [Service]
@@ -14,5 +13,5 @@ StartLimitBurst=3
 
 [Install]
 WantedBy=suspend.target
-WantedBy=default.target
+WantedBy=multi-user.target
 WantedBy=hibernate.target

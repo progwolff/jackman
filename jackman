@@ -51,6 +51,10 @@ common issues:
 
 
 function add_inout {
+
+    jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
+    [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(?=Hz)") = $(jack_samplerate) ]] && (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
+
     cardlines=$(LANG= aplay -l | grep card | grep device)
     printf '%s\n' "$cardlines" | while IFS= read -r cardline; do
         card=$(grep -o -P '(?<=card )[0-9]*' <<< "$cardline")
@@ -65,11 +69,7 @@ function add_inout {
         [[ verbose -gt 0 ]] && echo "`eval_gettext \"Attaching hw:\\\${card},\\\${device}.\"`"
         nohup alsa_out -d "hw:${card},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null & disown
         nohup alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null & disown
-    done
-    
-    jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
-    [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(?=Hz)") = $(jack_samplerate) ]] && (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
-    
+    done    
 }
 
 function jack_apply_config {
