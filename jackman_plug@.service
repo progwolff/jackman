@@ -4,12 +4,12 @@ After=suspend.target
 After=hibernate.target
 
 [Service]
-Type=forking
 ExecStart=/usr/bin/jackman_udev_plug %I &
 Restart=on-failure
 RestartSec=20
 StartLimitInterval=100
 StartLimitBurst=3
+KillMode=process
 
 [Install]
 WantedBy=suspend.target
