@@ -67,8 +67,8 @@ function add_inout {
         [[ $BLACKLIST =~ (^|;)"$name"($|;) ]] && continue
         #[[ verbose -gt 0 ]] && echo "$cardline"
         [[ verbose -gt 0 ]] && echo "`eval_gettext \"Attaching hw:\\\${card},\\\${device}.\"`"
-        nohup alsa_out -d "hw:${card},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null & disown
-        nohup alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null & disown
+        alsa_out -d "hw:${card},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null & disown
+        alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null & disown
     done    
 }
 
