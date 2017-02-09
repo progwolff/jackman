@@ -55,6 +55,7 @@ function add_inout {
     jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
     [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(?=Hz)") = $(jack_samplerate) ]] && (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
 
+    # add cards listed in aplay
     cardlines=$(LANG= aplay -l | grep card | grep device)
     printf '%s\n' "$cardlines" | while IFS= read -r cardline; do
         card=$(grep -o -P '(?<=card )[0-9]*' <<< "$cardline")
@@ -69,8 +70,25 @@ function add_inout {
         [[ verbose -gt 0 ]] && echo "`eval_gettext \"Attaching hw:\\\${card},\\\${device}.\"`"
         exec alsa_out -d "hw:${card},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null &
         disown
-	exec alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null &
-    	disown
+        exec alsa_in -d "hw:${card},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null &
+        disown
+    done    
+    
+    # add cards not listed in aplay
+    cardlines=$(grep "notlisted" "$jackhome/${configfile}")
+    echo "additional cards: $cardlines"
+    printf '%s\n' "$cardlines" | while IFS= read -r cardline; do
+        device=$(cut -d '=' -f 1 <<< "$cardline")
+        name=$(cut -d ',' -f 1 <<< ${device})
+        device=$(cut -d ',' -f 2 <<< ${device})
+        device=${device// /}
+        [[ $BLACKLIST =~ (^|;)"$name"($|;) ]] && continue
+        #[[ verbose -gt 0 ]] && echo "$cardline"
+        [[ verbose -gt 0 ]] && echo "`eval_gettext \"Attaching hw:\\\${name},\\\${device}.\"`"
+        exec alsa_out -d "hw:${name},${device}" -j "${name} - out" </dev/null >/dev/null 2>/dev/null &
+        disown
+        exec alsa_in -d "hw:${name},${device}" -j "${name} - in" </dev/null >/dev/null 2>/dev/null &
+        disown
     done    
 }
 
@@ -118,7 +136,7 @@ function jack_config {
 }
 
 function popup {
-    kdialog --passivepopup "$@" -display ":0" 10 --title "$(gettext "Audio Interface")" --icon audio-card || \
+    DISPLAY=":0" kdialog --passivepopup "$@" 10 --title "$(gettext "Audio Interface")" --icon audio-card || \
     zenity --notification --display ":0" --text "$1" --title "$(gettext "Audio Interface")" --window-icon audio-card || \
     echo "$1" &
 }
@@ -203,13 +221,15 @@ while read -r line; do
     newprio=$(grep -o -P '(?<=priority=)[0-9]*' <<< "$line")
     device=$(cut -d '=' -f 1 <<< ${line})
     shortname=$(cut -d ',' -f 1 <<< ${device})
+    notlisted=$(grep -o -P 'notlisted' <<< "$line")
     [[ verbose -gt 0 ]] && [[ ! -z ${device} ]] && echo $'\t'"${device}"
-    if [[ ! $BLACKLIST =~ (^|;)"$device"($|;) ]] && [[ $newprio -lt $prio ]] && [[ $(grep "${shortname}" <<< $(aplay -l)) ]]; then
+    if [[ ! $BLACKLIST =~ (^|;)"$device"($|;) ]] && [[ $newprio -lt $prio ]] && ( [[ ! -z $notlisted ]] || [[ $(grep "${shortname}" <<< $(aplay -l)) ]] ); then
         #echo "prio: $newprio"
         confline="$line"
         prio=$newprio
     fi
 done <<< "$conflines"
+
 
 device=$(cut -d '=' -f 1 <<< ${confline})
 [[ verbose -gt 0 ]] && echo $'\n'"`eval_gettext \"using \\\$device\"`"
@@ -248,7 +268,10 @@ else
         [[ -z $device ]] && device=0 && [[ verbose -gt 0 ]] && echo "$(gettext "no device set. trying device 0.")"
         
         confline=$(cut -d '=' -f 2- <<< ${confline})
-        confline="${confline};device=hw:$CARD,$device"
+        
+        devicename="hw:$CARD,$device"
+        [[ ! -z $notlisted ]] && devicename="${SHORTNAME// /_}:$device"
+        confline="${confline};device=$devicename"
         
         [[ verbose -gt 0 ]] && [[ -z $keep ]] && echo "$(gettext "using config:")"$'\n'$'\n'$'\t'"${confline//;/$'\n'$'\t'}" 
 
@@ -300,7 +323,7 @@ else
 
             # try next device if jack could not be started
             if ! timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null; then 
-                kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" -display ":0" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
+                DISPLAY=":0" kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
                 zenity --notification --display ":0" --text "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" --title "$(gettext "Audio Interface")" --window-icon dialog-warning & 
                 echo "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")"
                 

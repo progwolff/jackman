@@ -163,6 +163,9 @@ Devices must be given as `<Alsa Short Name>,<Device Number>`, e.g. `HDA Intel MI
 
 On KDE you might want to use the systemsettings module [jackman_kcm](https://github.com/progwolff/jackman_kcm). 
 
+Devices not listed in aplay (like virtual devices) might be added using the parameter "notlisted" (see jackman.conf 
+for an example)
+
 # Usage
 
 Run `jackman -h` for help or just plug in a USB audio interface.
