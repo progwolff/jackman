@@ -37,7 +37,7 @@ if [ ! -z $CARD ]; then
     
             /usr/bin/echo "need to switch master"
             msg="`eval_gettext \"Removed card \\\${currentcard}. Trying to switch master...\"`"
-            su $jackuser - -c "DISPALY=:0 /usr/bin/kdialog --passivepopup \"$msg\" 10 --title \"$(gettext "Audio Interface")\" --icon audio-card || \
+            su $jackuser - -c "DISPLAY=:0 /usr/bin/kdialog --passivepopup \"$msg\" 10 --title \"$(gettext "Audio Interface")\" --icon audio-card || \
             /usr/bin/zenity --notification --text \"$msg\" --display \":0\" --title \"$(gettext "Audio Interface")\" --window-icon audio-card || \
             /usr/bin/echo \"$msg\"" 
 
