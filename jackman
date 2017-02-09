@@ -76,7 +76,6 @@ function add_inout {
     
     # add cards not listed in aplay
     cardlines=$(grep "notlisted" "$jackhome/${configfile}")
-    echo "additional cards: $cardlines"
     printf '%s\n' "$cardlines" | while IFS= read -r cardline; do
         device=$(cut -d '=' -f 1 <<< "$cardline")
         name=$(cut -d ',' -f 1 <<< ${device})
@@ -232,6 +231,7 @@ done <<< "$conflines"
 
 
 device=$(cut -d '=' -f 1 <<< ${confline})
+notlisted=$(grep -o -P 'notlisted' <<< ${confline})
 [[ verbose -gt 0 ]] && echo $'\n'"`eval_gettext \"using \\\$device\"`"
 
 if [[ -z $CARD ]]; then
