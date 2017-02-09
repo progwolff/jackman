@@ -290,7 +290,7 @@ else
                         else
                             if [[ "period" = "${conf[0]// /}" ]]; then
                                 timeout .5 jack_bufsize "$newval"
-                                [[ verbose -gt 0 ]] && popup "`eval_gettext \"Buffer size changed from \\\${oldval} to \\\${newval}.\"`"
+                                #[[ verbose -gt 0 ]] && popup "`eval_gettext \"Buffer size changed from \\\${oldval} to \\\${newval}.\"`"
                             fi
                         fi
                     fi
@@ -323,8 +323,8 @@ else
 
             # try next device if jack could not be started
             if ! timeout .3 jack_control status </dev/null >/dev/null 2>/dev/null; then 
-                [[ verbose -gt 0 ]] && DISPLAY=":0" kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
-                [[ verbose -gt 0 ]] && zenity --notification --display ":0" --text "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" --title "$(gettext "Audio Interface")" --window-icon dialog-warning & 
+                #DISPLAY=":0" kdialog --passivepopup "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" 2 --title "$(gettext "Audio Interface")" --icon dialog-warning || \
+                #zenity --notification --display ":0" --text "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")" --title "$(gettext "Audio Interface")" --window-icon dialog-warning & 
                 echo "$(gettext "Could not start jack.")"$'\n'"$(gettext "Trying next device...")"
                 
                 # run this script with current device blacklisted
