@@ -17,7 +17,7 @@ jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
 [[ -z $jackuser ]] && jackuser=$(users | cut -d ' ' -f 1)
 jackhome=$(eval echo ~$jackuser)
 
-DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
+DBUS_SESSION_BUS_ADDRESS=$(</proc/6864/environ tr \\0 \\n | grep -oP '(?<=DBUS_SESSION_BUS_ADDRESS=).*')
 
 function die { echo "$@" 1>&2 ; exit 1; }
 
