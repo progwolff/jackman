@@ -38,11 +38,8 @@ Copy the following files:
 | `jackman`                  | `/usr/bin/`                              |
 | `jackman_udev_plug`        | `/usr/bin/`                              |
 | `jackman_udev_unplug`      | `/usr/bin/`                              |
-| `alsa_name.pl`             | `/usr/bin/`                              |
-| `jackman.rules`            | `/etc/udev/rules.d/`                     |
 | `jackman_plug@.service`    | `/etc/systemd/system/`                   |
 | `jackman_unplug@.service`  | `/etc/systemd/system/`                   |
-| `jackman_init.service`     | `/etc/systemd/system/`                   |
 | `50-jackman.rules`         | `/etc/udev/rules.d/`                     |
 | `jackman.desktop`          | `/etc/xdg/autostart/`                    |
 
