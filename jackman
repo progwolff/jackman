@@ -12,12 +12,13 @@ verbose=0
 
 configfile=".config/jackman.conf"
 
-jackuser=$(ps -p `pidof jackdbus | cut -d ' ' -f1` -o user=)
+jackpid=$(pidof jackdbus | cut -d ' ' -f1)
+jackuser=$(ps -p ${jackpid} -o user=)
 [[ -z $jackuser ]] && [[ ! $USER = "root" ]] && jackuser=$USER
 [[ -z $jackuser ]] && jackuser=$(users | cut -d ' ' -f 1)
 jackhome=$(eval echo ~$jackuser)
 
-DBUS_SESSION_BUS_ADDRESS=$(</proc/6864/environ tr \\0 \\n | grep -oP '(?<=DBUS_SESSION_BUS_ADDRESS=).*')
+DBUS_SESSION_BUS_ADDRESS=$(</proc/${jackpid}/environ tr \\0 \\n | grep -oP '(?<=DBUS_SESSION_BUS_ADDRESS=).*')
 
 function die { echo "$@" 1>&2 ; exit 1; }
 
