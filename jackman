@@ -18,7 +18,7 @@ jackuser=$(ps -p ${jackpid} -o user=)
 [[ -z $jackuser ]] && jackuser=$(users | cut -d ' ' -f 1)
 jackhome=$(eval echo ~$jackuser)
 
-DBUS_SESSION_BUS_ADDRESS=$(</proc/${jackpid}/environ tr \\0 \\n | grep -oP '(?<=DBUS_SESSION_BUS_ADDRESS=).*')
+#DBUS_SESSION_BUS_ADDRESS=$(</proc/${jackpid}/environ tr \\0 \\n | grep -oP '(?<=DBUS_SESSION_BUS_ADDRESS=).*')
 
 function die { echo "$@" 1>&2 ; exit 1; }
 

@@ -9,7 +9,7 @@ while [[ -z $jackuser ]]; do
     [[ -z $jackuser ]] && /usr/bin/sleep 5
 done
 
-export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u $jackuser)/bus"
+export DBUS_SESSION_BUS_ADDRESS=$(</proc/$(pidof jackdbus | cut -d ' ' -f1)/environ tr \\0 \\n | grep -oP '(?<=DBUS_SESSION_BUS_ADDRESS=).*')
 
 jackhome=$(eval /usr/bin/echo ~$jackuser)
 
