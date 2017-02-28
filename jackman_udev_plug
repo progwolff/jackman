@@ -10,6 +10,7 @@ while [[ -z $jackuser ]]; do
 done
 
 export DBUS_SESSION_BUS_ADDRESS=$(</proc/$(pidof jackdbus | cut -d ' ' -f1)/environ tr \\0 \\n | grep -oP '(?<=DBUS_SESSION_BUS_ADDRESS=).*')
+[[ -z $DBUS_SESSION_BUS_ADDRESS ]] && export DBUS_SESSION_BUS_ADDRESS=$(</proc/$(pidof dbus-daemon | cut -d ' ' -f1)/environ tr \\0 \\n | grep -oP '(?<=DBUS_SESSION_BUS_ADDRESS=).*')
 
 jackhome=$(eval /usr/bin/echo ~$jackuser)
 
