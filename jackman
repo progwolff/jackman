@@ -53,9 +53,6 @@ common issues:
 
 function add_inout {
 
-    jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
-    [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(?=Hz)") = $(jack_samplerate) ]] && (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
-
     # add cards listed in aplay
     cardlines=$(LANG= aplay -l | grep card | grep device)
     printf '%s\n' "$cardlines" | while IFS= read -r cardline; do
@@ -254,6 +251,8 @@ if [[ -z $FORCEREPLACE ]] && ( [[ ! -z $prio ]] && [[ $prio -gt $oldprio ]] ); t
         inout=$(grep -o -P '(?<=attach_others=).*' < ${jackhome}/.config/jackman.conf)
         
         if [[ $inout = "false" ]] || [[ $inout = "0" ]]; then
+            jack_lsp | grep -i pulseaudio >/dev/null 2>/dev/null || (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
+            [[ ! $(pacmd list-sinks | grep -o -P "[0-9]*(?=Hz)") = $(jack_samplerate) ]] && (pulseaudio -k && popup "$(gettext "restarting pulseaudio")") 
             [[ verbose -gt 0 ]] && echo "$(gettext "not attaching alsa_in and alsa_out as it's disabled in config file")"
         else
             [[ verbose -gt 0 ]] && echo "$(gettext "attaching alsa_in and alsa_out...")"
